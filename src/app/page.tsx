@@ -14,6 +14,7 @@ import {cn} from '@/lib/utils';
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<string[]>([]);
   const [nutritionalInfo, setNutritionalInfo] = useState<string>('');
   const [loadingFood, setLoadingFood] = useState(false);
@@ -23,14 +24,19 @@ export default function Home() {
     if (!e.target.files) return;
     const file = e.target.files[0];
     setImage(file);
-    setImageUrl(URL.createObjectURL(file));
+    setImageType(file.type);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleIdentifyFood = async () => {
     if (!imageUrl) return;
     setLoadingFood(true);
     try {
-      const result = await identifyFood({imageUrl});
+      const result = await identifyFood({imageUrl, imageType});
       setFoodItems(result.foodItems);
     } catch (error: any) {
       console.error('Error identifying food:', error);

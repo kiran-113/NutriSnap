@@ -19,6 +19,7 @@ import {z} from 'genkit';
 
 const IdentifyFoodInputSchema = z.object({
   imageUrl: z.string().describe('The URL of the image containing food items.'),
+  imageType: z.string().optional().describe('The MIME type of the image (e.g., image/jpeg).')
 });
 export type IdentifyFoodInput = z.infer<typeof IdentifyFoodInputSchema>;
 
@@ -29,25 +30,8 @@ const IdentifyFoodOutputSchema = z.object({
 });
 export type IdentifyFoodOutput = z.infer<typeof IdentifyFoodOutputSchema>;
 
-async function imageUrlToDataUrl(imageUrl: string): Promise<string> {
-  try {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error: any) {
-    console.error('Error fetching image:', error);
-    throw new Error(`Failed to fetch image from URL: ${imageUrl}. Please ensure the URL is valid and the server is accessible. Original error: ${error.message}`);
-  }
-}
-
 export async function identifyFood(input: IdentifyFoodInput): Promise<IdentifyFoodOutput> {
-  const dataUrl = await imageUrlToDataUrl(input.imageUrl);
-  return identifyFoodFlow({...input, imageUrl: dataUrl});
+  return identifyFoodFlow(input);
 }
 
 const identifyFoodPrompt = ai.definePrompt({
@@ -55,6 +39,7 @@ const identifyFoodPrompt = ai.definePrompt({
   input: {
     schema: z.object({
       imageUrl: z.string().describe('The URL of the image containing food items.'),
+      imageType: z.string().optional().describe('The MIME type of the image (e.g., image/jpeg).'),
     }),
   },
   output: {
@@ -68,16 +53,16 @@ const identifyFoodPrompt = ai.definePrompt({
 
   Given the following image, identify the food items present in the image and return a list of those items.
 
-  Image: {{media url=imageUrl}}
+  Image: {{media url=imageUrl type=imageType}}
   `,
 });
 
 const identifyFoodFlow = ai.defineFlow<
-  typeof IdentifyFoodInputSchema & z.ZodType<{imageUrl: string}>,
+  typeof IdentifyFoodInputSchema,
   typeof IdentifyFoodOutputSchema
 >({
   name: 'identifyFoodFlow',
-  inputSchema: IdentifyFoodInputSchema.extend({imageUrl: z.string()}),
+  inputSchema: IdentifyFoodInputSchema,
   outputSchema: IdentifyFoodOutputSchema,
 },
 async input => {
