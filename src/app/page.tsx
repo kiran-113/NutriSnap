@@ -1,4 +1,3 @@
-
 'use client';
 
 import {useState} from 'react';
@@ -10,6 +9,7 @@ import {identifyFood} from '@/ai/flows/identify-food-from-image';
 import {generateNutritionalInformation} from '@/ai/flows/generate-nutritional-information';
 import {Textarea} from '@/components/ui/textarea';
 import {cn} from '@/lib/utils';
+import {useToast} from '@/hooks/use-toast';
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
@@ -19,6 +19,7 @@ export default function Home() {
   const [nutritionalInfo, setNutritionalInfo] = useState<string>('');
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
+  const {toast} = useToast();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -38,9 +39,17 @@ export default function Home() {
     try {
       const result = await identifyFood({imageUrl, imageType});
       setFoodItems(result.foodItems);
+      toast({
+        title: 'Food Identified!',
+        description: 'Food items identified successfully.',
+      });
     } catch (error: any) {
       console.error('Error identifying food:', error);
-      alert(error.message);
+      toast({
+        variant: 'destructive',
+        title: 'Error Identifying Food',
+        description: error.message,
+      });
     } finally {
       setLoadingFood(false);
     }
@@ -52,9 +61,17 @@ export default function Home() {
     try {
       const result = await generateNutritionalInformation({foodItems});
       setNutritionalInfo(result.nutritionalSummary);
+      toast({
+        title: 'Nutritional Info Generated!',
+        description: 'Nutritional information generated successfully.',
+      });
     } catch (error: any) {
       console.error('Error generating nutrition info:', error);
-      alert(error.message);
+      toast({
+        variant: 'destructive',
+        title: 'Error Generating Nutrition Info',
+        description: error.message,
+      });
     } finally {
       setLoadingNutrition(false);
     }
@@ -166,3 +183,4 @@ export default function Home() {
     </div>
   );
 }
+
