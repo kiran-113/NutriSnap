@@ -30,14 +30,19 @@ const IdentifyFoodOutputSchema = z.object({
 export type IdentifyFoodOutput = z.infer<typeof IdentifyFoodOutputSchema>;
 
 async function imageUrlToDataUrl(imageUrl: string): Promise<string> {
-  const response = await fetch(imageUrl);
-  const blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error: any) {
+    console.error('Error fetching image:', error);
+    throw new Error(`Failed to fetch image from URL: ${imageUrl}. Please ensure the URL is valid and the server is accessible. Original error: ${error.message}`);
+  }
 }
 
 export async function identifyFood(input: IdentifyFoodInput): Promise<IdentifyFoodOutput> {
