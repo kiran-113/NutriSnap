@@ -153,6 +153,9 @@ export default function ThemePage() {
               </Button>
             </div>
           </div>
+          <Link href="/" className="flex justify-end">
+            <Button variant="outline">Switch to Previous Mode</Button>
+          </Link>
         </CardContent>
       </Card>
       {foodRecommendations ? (
@@ -168,9 +171,8 @@ export default function ThemePage() {
       ) : (
         <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
       )}
-      <Link href="/" className="flex justify-end">
-        <Button variant="outline">Switch to Previous Mode</Button>
-      </Link>
+      
     </div>
   );
 }
+
