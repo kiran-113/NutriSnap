@@ -179,7 +179,6 @@ export default function Home() {
    };
 
   const handleAddFoodItem = () => {
-
     setFoodItems([...foodItems, { name: '', quantity: '' }]);
   };
 
@@ -231,14 +230,8 @@ export default function Home() {
                   Choose Image
                 </Label>
               </Button>
+
               <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
-              <Button
-                variant="secondary"
-                onClick={handleIdentifyFood}
-                disabled={!imageDataUrl || loadingFood}
-              >
-                {loadingFood ? 'Identifying...' : 'Identify Food'}
-              </Button>
             
           
         
@@ -393,7 +386,7 @@ export default function Home() {
        
 
         <Link href="/theme">
-        <Button variant="outline">Switch to Instructions Mode</Button>
+        <Button variant="outline">More</Button>
         </Link>
        
        <Toaster />
