@@ -2,7 +2,7 @@
 
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
-import {useEffect, useState, use} from 'react';
+import {useEffect, useState} from 'react';
 
 async function getInstructions(dish: string) {
   // Placeholder instructions data (replace with actual data fetching)
@@ -51,7 +51,7 @@ async function getInstructions(dish: string) {
       '4. Add 2 chopped tomatoes and cook until they soften.',
       '5. Add 1 teaspoon of red chili powder, 1 teaspoon of coriander powder, and 1/2 teaspoon of garam masala. Sauté for a minute.',
       '6. Add the boiled lentils and beans and 2 cups of water. Simmer for 15-20 minutes, stirring occasionally.',
-      '7. Add 1/2 cup of cream and 2 tablespoons of butter. Simmer for another 5-7 minutes.',
+       '7. Add 1/2 cup of cream and 2 tablespoons of butter. Simmer for another 5-7 minutes.',
       '8. Garnish with fresh cilantro.',
       '9. Serve hot with rice or naan.',
       '10. Optional: Smoke the dal by placing a small steel bowl with a piece of burning charcoal in the center of the pan. Pour a teaspoon of ghee over the charcoal and cover the pan for 2-3 minutes.',
@@ -142,8 +142,7 @@ interface InstructionsPageProps {
 }
 
 export default function InstructionsPage({searchParams}: InstructionsPageProps) {
-  const searchParamsResolved = use(Promise.resolve(searchParams));
-  const {dish} = searchParamsResolved;
+  const {dish} = searchParams;
   const [instructions, setInstructions] = useState<string[]>([]);
 
   useEffect(() => {
