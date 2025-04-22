@@ -25,6 +25,7 @@ export default function ThemePage() {
   const [foodRecommendations, setFoodRecommendations] = useState<any>(null);
   const [dishRecommendations, setDishRecommendations] = useState<any>(null);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(false); // State to control visibility of recommendations
 
   useEffect(() => {
     // Determine the theme color based on food type selection
@@ -70,26 +71,23 @@ export default function ThemePage() {
     }
   };
 
-  const generateRecommendations = async (type: 'food' | 'dish') => {
+  const generateRecommendations = async () => {
     if (!nutrientTheme || Object.values(foodTheme).every(value => !value)) {
       alert('Please select a nutrient theme and at least one food theme.');
       return;
     }
 
     setLoadingRecommendations(true);
+    setShowRecommendations(true); // Show recommendations section
+
     try {
       const selectedFoodThemes = Object.keys(foodTheme).filter(key => foodTheme[key] === true && key !== 'all');
       const result = await generateFoodRecommendations({nutrientTheme: nutrientTheme, foodThemes: selectedFoodThemes});
-      if (type === 'food') {
-        setFoodRecommendations(result.recommendedFoods);
-        setDishRecommendations(null); // Clear other type
-      } else {
-        setDishRecommendations(result.recommendedFoods);
-        setFoodRecommendations(null); // Clear other type
-      }
+      setFoodRecommendations(result.recommendedFoods.slice(0, 5));
+      setDishRecommendations(result.recommendedFoods.slice(5, 10));
     } catch (error: any) {
-      console.error(`Error generating ${type} recommendations:`, error);
-      alert(`Error generating ${type} recommendations: ${error.message}`);
+      console.error('Error generating recommendations:', error);
+      alert(`Error generating recommendations: ${error.message}`);
     } finally {
       setLoadingRecommendations(false);
     }
@@ -155,11 +153,8 @@ export default function ThemePage() {
                 <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
                 <Label htmlFor="all">All</Label>
               </div>
-              <Button variant="secondary" onClick={() => generateRecommendations('food')} disabled={loadingRecommendations}>
-                {loadingRecommendations ? 'Generating...' : 'Generate Food Recommendations'}
-              </Button>
-              <Button variant="secondary" onClick={() => generateRecommendations('dish')} disabled={loadingRecommendations}>
-                {loadingRecommendations ? 'Generating...' : 'Generate Dish Recommendations'}
+              <Button variant="secondary" onClick={generateRecommendations} disabled={loadingRecommendations}>
+                {loadingRecommendations ? 'Generating...' : 'Generate Recommendations'}
               </Button>
             </div>
           </div>
@@ -168,36 +163,40 @@ export default function ThemePage() {
           </Link>
         </CardContent>
       </Card>
-      <h2>5 Food Items:</h2>
-      {foodRecommendations ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {foodRecommendations.slice(0, 5).map((food, index) => (
-            <div key={index} className="bg-blue-100 p-4 rounded-md shadow-md">
-              <strong className="block font-semibold">{food.name}</strong>
-              <p className="text-sm">{food.description}</p>
-              <p className="text-sm"><b>Nutrient Amount:</b> {food.nutrientAmount}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
-      )}
 
-      <h2>5 Dishes:</h2>
-      {dishRecommendations ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {dishRecommendations.slice(0, 5).map((dish, index) => (
-            <div key={index} className="bg-green-100 p-4 rounded-md shadow-md">
-              <strong className="block font-semibold">{dish.name}</strong>
-              <p className="text-sm">{dish.description}</p>
-              <p className="text-sm"><b>Nutrient Amount:</b> {dish.nutrientAmount}</p>
+      {showRecommendations && (
+        <>
+          <h2>5 Food Items:</h2>
+          {foodRecommendations ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {foodRecommendations.map((food, index) => (
+                <div key={index} className="bg-blue-100 p-4 rounded-md shadow-md">
+                  <strong className="block font-semibold">{food.name}</strong>
+                  <p className="text-sm">{food.description}</p>
+                  <p className="text-sm"><b>Nutrient Amount:</b> {food.nutrientAmount}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <p>No dish recommendations generated yet. Please select a nutrient and food theme.</p>
+          ) : (
+            <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
+          )}
+
+          <h2>5 Dishes:</h2>
+          {dishRecommendations ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {dishRecommendations.map((dish, index) => (
+                <div key={index} className="bg-green-100 p-4 rounded-md shadow-md">
+                  <strong className="block font-semibold">{dish.name}</strong>
+                  <p className="text-sm">{dish.description}</p>
+                  <p className="text-sm"><b>Nutrient Amount:</b> {dish.nutrientAmount}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No dish recommendations generated yet. Please select a nutrient and food theme.</p>
+          )}
+        </>
       )}
-      
     </div>
   );
 }
