@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useRef, useEffect} from 'react';
+import {useEffect} from 'react';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
@@ -15,13 +15,14 @@ import {Camera, Upload} from 'lucide-react';
 import {estimateFoodWeight} from '@/ai/flows/estimate-food-weight';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
+import {useState, useRef} from 'react';
 
-export default function Home() {
+export default function ThemePage() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([]);
-  const [nutritionalInfo, setNutritionalInfo] = useState<{
+  const [nutritionalInfo, setNutritionalInfo,>: any = useState<{
     calories: string;
     protein: string;
     carbohydrates: string;
@@ -43,7 +44,6 @@ export default function Home() {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const router = useRouter();
-
   useEffect(() => {
     const getCameraPermission = async () => {
       try {
@@ -203,10 +203,10 @@ export default function Home() {
   }, 0);
 
   return (
-    <div className="container mx-auto p-4 transition-colors duration-500">
+    <div className="blue-black-theme container mx-auto p-4 transition-colors duration-500">
       <div className="flex justify-between items-center mb-4">
         <CardTitle>NutriSnap</CardTitle>
-        <Link href="/theme">
+        <Link href="/">
           <Button variant="outline">Change Theme</Button>
         </Link>
       </div>
