@@ -15,34 +15,42 @@ import {Camera, Upload} from 'lucide-react';
 import {estimateFoodWeight} from '@/ai/flows/estimate-food-weight';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const Toaster = dynamic(() => import('@/components/ui/toaster').then(mod => mod.Toaster), {
+  ssr: false,
+});
+
+const isNonVeg = (foodName: string) => {
+  const lowerCaseName = foodName.toLowerCase();
+  return lowerCaseName.includes('chicken') ||
+         lowerCaseName.includes('fish') ||
+         lowerCaseName.includes('mutton') ||
+         lowerCaseName.includes('beef') ||
+         lowerCaseName.includes('pork') ||
+         lowerCaseName.includes('egg');
+};
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
-  const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([]);
-  const [nutritionalInfo, setNutritionalInfo] = useState<{
-    calories: string;
-    protein: string;
-    carbohydrates: string;
-    fiber: string;
-    calcium: string;
-    iron: string;
-    vitaminB: string;
-    vitaminC: string;
-    vitaminA: string;
-    vitaminD: string;
-    potassium: string;
-    overall: string;
-  } | null>(null);
+  const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([{name: '', quantity: ''}]);
+  const [nutritionalInfo, setNutritionalInfo] = useState<any>(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
   const [weightEstimationLoading, setWeightEstimationLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
-  const [isCameraActive, setIsCameraActive] = useState(false);
   const router = useRouter();
+  const [themeColor, setThemeColor] = useState('bg-green-100');
+
+  useEffect(() => {
+    // Update theme color based on food items
+    const hasNonVegItem = foodItems.some(item => isNonVeg(item.name));
+    setThemeColor(hasNonVegItem ? 'bg-red-100 shadow-red-500/50' : 'bg-green-100 shadow-green-500/50');
+  }, [foodItems]);
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -88,7 +96,6 @@ export default function Home() {
         const stream = await navigator.mediaDevices.getUserMedia({video: true});
         setHasCameraPermission(true);
         videoRef.current!.srcObject = stream;
-        setIsCameraActive(true); // Set camera as active if permission is granted
       } catch (error: any) {
         console.error('Error accessing camera:', error);
         setHasCameraPermission(false);
@@ -110,7 +117,6 @@ export default function Home() {
       const dataUrl = canvas.toDataURL('image/jpeg');
       setImageUrl(dataUrl);
       setImageType('image/jpeg');
-      setIsCameraActive(false); // Optionally stop camera after capturing
       videoRef.current.srcObject = null;
     }
   };
@@ -176,11 +182,11 @@ export default function Home() {
         setFoodItems(newFoodItems);
       } catch (error: any) {
         console.error('Error estimating weight:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error Estimating Weight',
-          description: error.message,
-        });
+         toast({
+           variant: 'destructive',
+           title: 'Error Estimating Weight',
+           description: error.message,
+         });
       } finally {
         setWeightEstimationLoading(false);
       }
@@ -203,7 +209,7 @@ export default function Home() {
   }, 0);
 
   return (
-    <div className="container mx-auto p-4 transition-colors duration-500">
+    <div className={cn("container mx-auto p-4 transition-colors duration-500", themeColor)}>
       <div className="flex justify-between items-center mb-4">
         <CardTitle>NutriSnap</CardTitle>
         <Link href="/theme">
@@ -235,7 +241,7 @@ export default function Home() {
               </Button>
             </div>
 
-            {isCameraActive && (
+            {hasCameraPermission && (
               <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
             )}
 
@@ -420,8 +426,8 @@ export default function Home() {
           </a>
         </p>
       </footer>
-      ;
+      
+      <Toaster/>
     </div>
   );
 }
-
