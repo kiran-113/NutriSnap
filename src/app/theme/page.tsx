@@ -49,7 +49,21 @@ export default function ThemePage() {
   };
 
   const handleFoodThemeChange = (theme: string, checked: boolean) => {
-    setFoodTheme({...foodTheme, [theme]: checked});
+    if (theme === 'all') {
+      setFoodTheme({
+        all: checked,
+        veg: checked,
+        nonVeg: checked,
+        egg: checked,
+        seafood: checked,
+      });
+    } else {
+      setFoodTheme(prevTheme => {
+        const updatedTheme = {...prevTheme, [theme]: checked};
+        const anySelected = Object.keys(updatedTheme).filter(key => key !== 'all').some(key => updatedTheme[key]);
+        return {...updatedTheme, all: anySelected && Object.keys(updatedTheme).filter(key => key !== 'all').every(key => updatedTheme[key])};
+      });
+    }
   };
 
   return (
@@ -122,4 +136,3 @@ export default function ThemePage() {
     </div>
   );
 }
-
