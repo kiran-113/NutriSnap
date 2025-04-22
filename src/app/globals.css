@@ -82,32 +82,32 @@ body {
 
   /* Green Theme */
   .green-theme {
-    --background: 100 60% 60%;
+    --background: 100 60% 50%;
     --foreground: 0 0% 5%;
     --primary: 140 50% 45%;
     --secondary: 140 20% 70%;
     --accent: 60 90% 55%;
-    --shadow-color: rgba(100, 100, 100, 0.4); /* Example shadow color */
+    --shadow-color: rgba(100, 100, 100, 0.6); /* Increased shadow opacity */
   }
 
   /* Orange Theme */
   .orange-theme {
-    --background: 40 60% 60%;
+    --background: 40 60% 50%;
     --foreground: 0 0% 5%;
     --primary: 40 50% 45%;
     --secondary: 40 20% 70%;
     --accent: 40 90% 55%;
-    --shadow-color: rgba(200, 100, 0, 0.4); /* Example shadow color */
+    --shadow-color: rgba(200, 100, 0, 0.6); /* Increased shadow opacity */
   }
 
   /* Red Theme */
   .red-theme {
-    --background: 0 60% 60%;
+    --background: 0 60% 50%;
     --foreground: 0 0% 5%;
     --primary: 0 50% 45%;
     --secondary: 0 20% 70%;
     --accent: 0 90% 55%;
-    --shadow-color: rgba(200, 0, 0, 0.4); /* Example shadow color */
+    --shadow-color: rgba(200, 0, 0, 0.6); /* Increased shadow opacity */
   }
 
   * {

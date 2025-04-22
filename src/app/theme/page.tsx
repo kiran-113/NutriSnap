@@ -1,3 +1,4 @@
+
 'use client';
 
 import {useRouter} from 'next/navigation';
@@ -94,8 +95,8 @@ export default function ThemePage() {
         <CardHeader>
           <CardTitle>Customize Theme</CardTitle>
         </CardHeader>
-        <CardContent className="flex">
-          <div className="w-1/2 pr-4">
+        <CardContent className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2 pr-4">
             <Label>Select Nutrient Theme</Label>
             <RadioGroup defaultValue={nutrientTheme} onValueChange={handleNutrientThemeChange} className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
@@ -125,7 +126,7 @@ export default function ThemePage() {
             </RadioGroup>
           </div>
 
-          <div className="w-1/2 pl-4">
+          <div className="w-full md:w-1/2 pl-4">
             <Label>Select Food Theme</Label>
             <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
@@ -175,4 +176,3 @@ export default function ThemePage() {
     </div>
   );
 }
-
