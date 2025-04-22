@@ -33,10 +33,10 @@ const isNonVeg = (foodName: string) => {
 
 export default function Home() {
   const [image, setImageUrl] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageDataUrl, setImageDataUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<{ name: string; quantity: string; }[]>([{name: '', quantity: ''}]);
-  const [nutritionalInfo, setNutritionalInfo: any] = useState(null);
+  const [nutritionalInfo, setNutritionalInfo] = useState(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
@@ -80,11 +80,11 @@ export default function Home() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
-    setImageUrl(URL.createObjectURL(file));
+    setImageDataUrl(URL.createObjectURL(file));
     setImageType(file.type);
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImageUrl(reader.result as string);
+      setImageDataUrl(reader.result as string);
     };
   };
 
@@ -114,17 +114,17 @@ export default function Home() {
       const ctx = canvas.getContext('2d');
       ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
       const dataUrl = canvas.toDataURL('image/jpeg');
-      setImageUrl(dataUrl);
+      setImageDataUrl(dataUrl);
       setImageType('image/jpeg');
       videoRef.current.srcObject = null;
     }
   };
 
   const handleIdentifyFood = async () => {
-    if (!imageUrl) return;
+    if (!imageDataUrl) return;
     setLoadingFood(true);
     try {
-      const result = await identifyFood({imageUrl, imageType});
+      const result = await identifyFood({imageUrl: imageDataUrl, imageType});
       setFoodItems(result.foodItems.map(foodItem => ({name: foodItem, quantity: ''})));
       toast({
         title: 'Food Identified!',
@@ -251,13 +251,13 @@ export default function Home() {
               </Alert>
             )}
 
-            {imageUrl && (
+            {imageDataUrl && (
               <div className="flex justify-center">
-                <img src={imageUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
+                <img src={imageDataUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
               </div>
             )}
             <Button
-              disabled={!imageUrl || loadingFood}
+              disabled={!imageDataUrl || loadingFood}
               onClick={handleIdentifyFood}
               className="bg-accent text-accent-foreground hover:bg-accent/80"
             >
