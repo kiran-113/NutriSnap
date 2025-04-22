@@ -49,8 +49,7 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   // Removed transition classes to avoid background fading.
-  // Adjusted the themeColor to a darker, more readable gradient
-  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-blue-800 via-blue-600 to-blue-400');
+  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   useEffect(() => {
@@ -196,21 +195,16 @@ export default function Home() {
   };
 
   return (
-    <div className={cn('container mx-auto p-4', themeColor)}>
+    <div className={cn("container mx-auto p-4", themeColor)}>
       <div className="flex justify-between items-center mb-4">
-        {/* Changed CardTitle to a more readable text color */}
         <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
-          <Button
-            variant="outline"
-            className="bg-white text-black hover:bg-gray-200 border border-white"
-          >
+          <Button variant="outline" className="bg-white text-black hover:bg-gray-200 border border-white">
             More
           </Button>
         </Link>
       </div>
-      {/* Changed the subtitle text color for better readability */}
-      <h2 className="mb-4 text-2xl font-semibold text-gray-100 drop-shadow-md">
+      <h2 className="mb-4 text-2xl font-semibold text-yellow-300 drop-shadow-md">
         Effortlessly track your nutrition!
       </h2>
 
@@ -288,8 +282,7 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        {/* Changed Food Items title color for better visibility */}
-        <h3 className="text-lg font-semibold mb-2 text-gray-100">Food Items</h3>
+        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Food Items</h3>
         {foodItems.map((item, index) => (
           <div
             key={index}
@@ -337,61 +330,60 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        {/* Changed Nutritional Information title color for readability */}
-        <h3 className="text-lg font-semibold mb-2 text-gray-100">Nutritional Information</h3>
+        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Nutritional Information</h3>
         {nutritionalInfo ? (
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <p className="font-medium text-gray-100">Calories</p>
+              <p className="font-medium text-yellow-300">Calories</p>
               <Textarea readOnly value={nutritionalInfo.calories} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Protein</p>
+              <p className="font-medium text-yellow-300">Protein</p>
               <Textarea readOnly value={nutritionalInfo.protein} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Carbohydrates</p>
+              <p className="font-medium text-yellow-300">Carbohydrates</p>
               <Textarea readOnly value={nutritionalInfo.carbohydrates} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Fiber</p>
+              <p className="font-medium text-yellow-300">Fiber</p>
               <Textarea readOnly value={nutritionalInfo.fiber} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Calcium</p>
+              <p className="font-medium text-yellow-300">Calcium</p>
               <Textarea readOnly value={nutritionalInfo.calcium} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Iron</p>
+              <p className="font-medium text-yellow-300">Iron</p>
               <Textarea readOnly value={nutritionalInfo.iron} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Vitamin A</p>
+              <p className="font-medium text-yellow-300">Vitamin A</p>
               <Textarea readOnly value={nutritionalInfo.vitaminA} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Vitamin B</p>
+              <p className="font-medium text-yellow-300">Vitamin B</p>
               <Textarea readOnly value={nutritionalInfo.vitaminB} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Vitamin C</p>
+              <p className="font-medium text-yellow-300">Vitamin C</p>
               <Textarea readOnly value={nutritionalInfo.vitaminC} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Vitamin D</p>
+              <p className="font-medium text-yellow-300">Vitamin D</p>
               <Textarea readOnly value={nutritionalInfo.vitaminD} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Potassium</p>
+              <p className="font-medium text-yellow-300">Potassium</p>
               <Textarea readOnly value={nutritionalInfo.potassium} />
             </div>
             <div>
-              <p className="font-medium text-gray-100">Overall Nutritional Information</p>
+              <p className="font-medium text-yellow-300">Overall Nutritional Information</p>
               <Textarea readOnly value={nutritionalInfo.overall} />
             </div>
           </div>
         ) : (
-          <p className="text-gray-100">No nutritional information generated yet.</p>
+          <p className="text-yellow-300">No nutritional information generated yet.</p>
         )}
       </div>
 
@@ -407,8 +399,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-between items-center mb-4">
-        {/* Changed powered by text to be more readable */}
-        <p className="text-gray-100">
+        <p className="text-yellow-300">
           Powered by <span className="font-bold">Firebase</span> | AI features powered by{' '}
           <span className="font-bold">Genkit</span>
         </p>
