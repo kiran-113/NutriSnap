@@ -219,42 +219,39 @@ export default function Home() {
             className="w-full aspect-video rounded-md shadow-lg"
           />
         ) : (
-          <>
-            <p>Upload image or take pic</p>
-            <div className="flex space-x-2 mb-4">
-              {!isCameraActive && (
-                <Button
-                  variant="secondary"
-                  onClick={enableCamera}
-                  disabled={hasCameraPermission}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                >
-                  <Camera className="mr-2 h-4 w-4" />
-                  Enable Camera
-                </Button>
-              )}
-              {isCameraActive && (
-                <Button
-                  variant="secondary"
-                  onClick={handleCapture}
-                  disabled={!hasCameraPermission}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  <Camera className="mr-2 h-4 w-4" />
-                  Capture Image
-                </Button>
-              )}
-
-              <Button variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
-                <Label htmlFor="image" className="flex items-center cursor-pointer">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Choose Image
-                </Label>
+          <div className="flex space-x-2 mb-4">
+            {!isCameraActive && (
+              <Button
+                variant="secondary"
+                onClick={enableCamera}
+                disabled={hasCameraPermission}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white"
+              >
+                <Camera className="mr-2 h-4 w-4" />
+                Enable Camera
               </Button>
+            )}
+            {isCameraActive && (
+              <Button
+                variant="secondary"
+                onClick={handleCapture}
+                disabled={!hasCameraPermission}
+                className="bg-green-500 hover:bg-green-600 text-white"
+              >
+                <Camera className="mr-2 h-4 w-4" />
+                Capture Image
+              </Button>
+            )}
 
-              <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
-            </div>
-          </>
+            <Button variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
+              <Label htmlFor="image" className="flex items-center cursor-pointer">
+                <Upload className="mr-2 h-4 w-4" />
+                Choose Image
+              </Label>
+            </Button>
+
+            <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
+          </div>
         )}
       </div>
 
@@ -370,9 +367,7 @@ export default function Home() {
               <Textarea readOnly value={nutritionalInfo.overall} />
             </div>
           </div>
-        ) : (
-          <p className="text-white">No nutritional information generated yet.</p>
-        )}
+        ) : null}
       </div>
 
       <div className="mb-6">
@@ -405,4 +400,3 @@ export default function Home() {
     </div>
   );
 }
-
