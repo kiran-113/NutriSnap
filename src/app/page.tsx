@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
@@ -10,6 +10,8 @@ import {generateNutritionalInformation} from '@/ai/flows/generate-nutritional-in
 import {Textarea} from '@/components/ui/textarea';
 import {cn} from '@/lib/utils';
 import {useToast} from '@/hooks/use-toast';
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Camera} from "lucide-react";
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
@@ -20,6 +22,33 @@ export default function Home() {
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
+        });
+      }
+    };
+
+    getCameraPermission();
+  }, []);
+
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -32,6 +61,29 @@ export default function Home() {
     };
     reader.readAsDataURL(file);
   };
+
+  const handleCaptureImage = () => {
+    if (!videoRef.current) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      toast({
+        variant: 'destructive',
+        title: 'Canvas Context Error',
+        description: 'Could not create canvas context.',
+      });
+      return;
+    }
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    setImageUrl(dataUrl);
+    setImageType('image/jpeg');
+  };
+
 
   const handleIdentifyFood = async () => {
     if (!imageUrl) return;
@@ -103,9 +155,43 @@ export default function Home() {
         <CardContent>
           <div className="grid gap-4">
             <div className="flex items-center space-x-2">
-              <Label htmlFor="image">Image:</Label>
-              <Input id="image" type="file" onChange={handleImageUpload} />
+              <Button asChild variant="secondary">
+                <Label htmlFor="image" className="cursor-pointer">
+                    Choose Image
+                </Label>
+              </Button>
+              <Input
+                id="image"
+                type="file"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+
+              <Button
+                  variant="secondary"
+                  onClick={handleCaptureImage}
+                  disabled={!hasCameraPermission}
+              >
+                Capture Image
+              </Button>
             </div>
+
+            { hasCameraPermission && (
+                <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+            )
+            }
+
+            { !(hasCameraPermission) && (
+                <Alert variant="destructive">
+                  <AlertTitle>Camera Access Required</AlertTitle>
+                  <AlertDescription>
+                    Please allow camera access to use this feature.
+                  </AlertDescription>
+                </Alert>
+            )
+            }
+
+
             {imageUrl && (
               <div className="flex justify-center">
                 <img src={imageUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
@@ -183,4 +269,3 @@ export default function Home() {
     </div>
   );
 }
-
