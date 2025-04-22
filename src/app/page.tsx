@@ -195,7 +195,7 @@ export default function Home() {
   };
 
   return (
-    <div className={cn('container mx-auto p-4', themeColor)}>
+    <div className={cn("container mx-auto p-4", themeColor)}>
       <div className="flex justify-between items-center mb-4">
         <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
@@ -326,7 +326,7 @@ export default function Home() {
         <Button
           variant="secondary"
           onClick={handleAddFoodItem}
-          className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:bg-yellow-600 text-white"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white"
         >
           Add Food Item
         </Button>
