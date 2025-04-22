@@ -37,11 +37,30 @@ export default function Home() {
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
   const [vegMode, setVegMode] = useState(true);
+  const [pageColor, setPageColor] = useState("bg-green-200");
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
+  // Function to check if a food item is non-vegetarian
+  const isNonVegItem = (foodItem: string) => {
+    const nonVegKeywords = ['meat', 'chicken', 'fish', 'egg', 'beef', 'pork', 'lamb'];
+    const lowerCaseItem = foodItem.toLowerCase();
+    return nonVegKeywords.some(keyword => lowerCaseItem.includes(keyword));
+  };
+
+  useEffect(() => {
+    // Check if any food item is non-veg
+    const hasNonVeg = foodItems.some(item => isNonVegItem(item.name));
+
+    if (hasNonVeg) {
+      setPageColor("bg-red-200"); // Set to red if non-veg item is present
+    } else {
+      // Set to green or orange based on vegMode
+      setPageColor(vegMode ? "bg-green-200" : "bg-orange-200");
+    }
+  }, [foodItems, vegMode]);
 
   const enableCamera = async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -183,16 +202,20 @@ export default function Home() {
     return isNaN(quantityValue) ? sum : sum + quantityValue;
   }, 0);
 
+  const handleVegModeChange = (checked: boolean) => {
+    setVegMode(checked);
+  };
+
   return (
-    <div className={cn("container mx-auto p-4", vegMode ? "bg-green-100" : "bg-orange-100")}>
-           <div className="flex justify-between items-center mb-4">
+    <div className={cn("container mx-auto p-4 transition-colors duration-500", pageColor)}>
+      <div className="flex justify-between items-center mb-4">
         <CardTitle>NutriSnap</CardTitle>
         <div className="flex items-center space-x-2">
           <Label htmlFor="vegMode">Veg Mode</Label>
           <Switch
             id="vegMode"
             checked={vegMode}
-            onCheckedChange={(checked) => setVegMode(checked)}
+            onCheckedChange={handleVegModeChange}
           />
         </div>
       </div>
@@ -401,4 +424,5 @@ export default function Home() {
     </div>
   );
 }
+
 
