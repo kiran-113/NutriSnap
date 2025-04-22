@@ -1,3 +1,4 @@
+
 'use client';
 
 import {useState, useRef, useEffect} from 'react';
@@ -11,7 +12,7 @@ import {Textarea} from '@/components/ui/textarea';
 import {cn} from '@/lib/utils';
 import {useToast} from '@/hooks/use-toast';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {Camera} from "lucide-react";
+import {Camera, Upload } from "lucide-react";
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
@@ -160,15 +161,16 @@ export default function Home() {
     <div className="container mx-auto p-4">
       <Card className="mb-4">
         <CardHeader>
-          <CardTitle>Upload Food Image</CardTitle>
+          <CardTitle>NutriSnap</CardTitle>
           <CardDescription>Identify food items from an image and get nutritional information.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <div className="flex items-center space-x-2">
               <Button asChild variant="secondary">
-                <Label htmlFor="image" className="cursor-pointer">
-                    Choose Image
+                <Label htmlFor="image" className="cursor-pointer flex items-center">
+                  <Upload className="mr-2 h-4 w-4" />
+                  Choose Image
                 </Label>
               </Button>
               <Input
@@ -183,6 +185,7 @@ export default function Home() {
                   onClick={handleCaptureImage}
                   disabled={!hasCameraPermission || !videoRef.current?.videoWidth}
               >
+                <Camera className="mr-2 h-4 w-4" />
                 Capture Image
               </Button>
             </div>
@@ -277,4 +280,3 @@ export default function Home() {
     </div>
   );
 }
-
