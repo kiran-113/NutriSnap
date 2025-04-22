@@ -197,7 +197,7 @@ export default function Home() {
   return (
     <div className={cn('container mx-auto p-4', themeColor)}>
       <div className="flex justify-between items-center mb-4">
-        <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
+        <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
           <Button
             variant="outline"
@@ -207,23 +207,19 @@ export default function Home() {
           </Button>
         </Link>
       </div>
-      <h2 className="mb-4 text-2xl font-semibold text-white drop-shadow-md">
+      <h2 className="mb-4 text-2xl font-semibold text-yellow-300 drop-shadow-md">
         Effortlessly track your nutrition!
       </h2>
 
-      <div className="mb-4">
-        {imageDataUrl ? (
+      {imageDataUrl && (
+        <div className="mb-4">
           <img
             src={imageDataUrl}
             alt="Uploaded Food"
             className="w-full aspect-video rounded-md shadow-lg"
           />
-        ) : (
-          <div className="text-center p-4">
-            <p className="font-medium text-white">Upload image or take picture to continue.</p>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="flex space-x-2 mb-4">
         {!isCameraActive && (
@@ -271,7 +267,7 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-white">Food Items</h3>
+        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Food Items</h3>
         {foodItems.map((item, index) => (
           <div
             key={index}
@@ -312,67 +308,67 @@ export default function Home() {
         <Button
           variant="secondary"
           onClick={handleAddFoodItem}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white"
+          className="bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white"
         >
           Add Food Item
         </Button>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-white">Nutritional Information</h3>
+        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Nutritional Information</h3>
         {nutritionalInfo ? (
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <p className="font-medium text-white">Calories</p>
+              <p className="font-medium text-yellow-300">Calories</p>
               <Textarea readOnly value={nutritionalInfo.calories} />
             </div>
             <div>
-              <p className="font-medium text-white">Protein</p>
+              <p className="font-medium text-yellow-300">Protein</p>
               <Textarea readOnly value={nutritionalInfo.protein} />
             </div>
             <div>
-              <p className="font-medium text-white">Carbohydrates</p>
+              <p className="font-medium text-yellow-300">Carbohydrates</p>
               <Textarea readOnly value={nutritionalInfo.carbohydrates} />
             </div>
             <div>
-              <p className="font-medium text-white">Fiber</p>
+              <p className="font-medium text-yellow-300">Fiber</p>
               <Textarea readOnly value={nutritionalInfo.fiber} />
             </div>
             <div>
-              <p className="font-medium text-white">Calcium</p>
+              <p className="font-medium text-yellow-300">Calcium</p>
               <Textarea readOnly value={nutritionalInfo.calcium} />
             </div>
             <div>
-              <p className="font-medium text-white">Iron</p>
+              <p className="font-medium text-yellow-300">Iron</p>
               <Textarea readOnly value={nutritionalInfo.iron} />
             </div>
             <div>
-              <p className="font-medium text-white">Vitamin A</p>
+              <p className="font-medium text-yellow-300">Vitamin A</p>
               <Textarea readOnly value={nutritionalInfo.vitaminA} />
             </div>
             <div>
-              <p className="font-medium text-white">Vitamin B</p>
+              <p className="font-medium text-yellow-300">Vitamin B</p>
               <Textarea readOnly value={nutritionalInfo.vitaminB} />
             </div>
             <div>
-              <p className="font-medium text-white">Vitamin C</p>
+              <p className="font-medium text-yellow-300">Vitamin C</p>
               <Textarea readOnly value={nutritionalInfo.vitaminC} />
             </div>
             <div>
-              <p className="font-medium text-white">Vitamin D</p>
+              <p className="font-medium text-yellow-300">Vitamin D</p>
               <Textarea readOnly value={nutritionalInfo.vitaminD} />
             </div>
             <div>
-              <p className="font-medium text-white">Potassium</p>
+              <p className="font-medium text-yellow-300">Potassium</p>
               <Textarea readOnly value={nutritionalInfo.potassium} />
             </div>
             <div>
-              <p className="font-medium text-white">Overall Nutritional Information</p>
+              <p className="font-medium text-yellow-300">Overall Nutritional Information</p>
               <Textarea readOnly value={nutritionalInfo.overall} />
             </div>
           </div>
         ) : (
-          null
+          ''
         )}
       </div>
 
@@ -388,7 +384,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-between items-center mb-4">
-        <p className="text-white">
+        <p className="text-yellow-300">
           Powered by <span className="font-bold">Firebase</span> | AI features powered by{' '}
           <span className="font-bold">Genkit</span>
         </p>
