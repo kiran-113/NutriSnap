@@ -13,19 +13,27 @@ import {Checkbox} from '@/components/ui/checkbox';
 export default function ThemePage() {
   const router = useRouter();
   const [nutrientTheme, setNutrientTheme] = useState('');
-  const [foodTheme, setFoodTheme] = useState('');
+  const [foodTheme, setFoodTheme] = useState({
+    veg: false,
+    nonVeg: false,
+    egg: false,
+    seafood: false,
+  });
   const [themeColor, setThemeColor] = useState('bg-gray-100');
 
   useEffect(() => {
     // Determine the theme color based on food type selection
     let color = 'bg-gray-100'; // Default color
-    if (foodTheme === 'veg') {
+    if (foodTheme.veg) {
       color = 'bg-green-200';
-    } else if (foodTheme === 'non-veg') {
+    }
+    if (foodTheme.nonVeg) {
       color = 'bg-red-200';
-    } else if (foodTheme === 'egg') {
+    }
+    if (foodTheme.egg) {
       color = 'bg-yellow-200';
-    } else if (foodTheme === 'seafood') {
+    }
+    if (foodTheme.seafood) {
       color = 'bg-blue-200';
     }
     setThemeColor(color);
@@ -36,9 +44,8 @@ export default function ThemePage() {
     console.log(`Selected nutrient theme: ${value}`);
   };
 
-  const handleFoodThemeChange = (value: string) => {
-    setFoodTheme(value);
-    console.log(`Selected food theme: ${value}`);
+  const handleFoodThemeChange = (theme: string, checked: boolean) => {
+    setFoodTheme({...foodTheme, [theme]: checked});
   };
 
   return (
@@ -82,19 +89,19 @@ export default function ThemePage() {
             <Label>Select Food Theme</Label>
             <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
-                <Checkbox id="veg" />
+                <Checkbox id="veg" checked={foodTheme.veg} onCheckedChange={checked => handleFoodThemeChange('veg', checked)} />
                 <Label htmlFor="veg">Veg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="non-veg" />
+                <Checkbox id="non-veg" checked={foodTheme.nonVeg} onCheckedChange={checked => handleFoodThemeChange('nonVeg', checked)} />
                 <Label htmlFor="non-veg">Non-Veg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="egg" />
+                <Checkbox id="egg" checked={foodTheme.egg} onCheckedChange={checked => handleFoodThemeChange('egg', checked)} />
                 <Label htmlFor="egg">Egg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="seafood" />
+                <Checkbox id="seafood" checked={foodTheme.seafood} onCheckedChange={checked => handleFoodThemeChange('seafood', checked)} />
                 <Label htmlFor="seafood">Seafood</Label>
               </div>
             </div>
@@ -107,4 +114,3 @@ export default function ThemePage() {
     </div>
   );
 }
-
