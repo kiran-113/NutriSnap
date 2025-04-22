@@ -2,35 +2,69 @@
 
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
-import {useEffect, useState} from 'react';
+import {use, useEffect, useState} from 'react';
 
 async function getInstructions(dish: string) {
   // Placeholder instructions data (replace with actual data fetching)
   const instructionsData = {
-    'Idli Sambar': [
-      '1. Soak idli rice and urad dal separately for 4-5 hours.',
-      '2. Grind to a smooth batter and ferment overnight.',
-      '3. Steam idlis in molds until cooked.',
-      '4. Serve with sambar and chutneys.',
+    'Palak Paneer': [
+      '1. Heat oil in a pan, add cumin seeds, and sauté onions and ginger-garlic paste.',
+      '2. Add tomato puree, spices, and cook until oil separates.',
+      '3. Add spinach puree and simmer for 10 minutes.',
+      '4. Add paneer cubes and cook for 5 minutes. Garnish with cream and serve.',
     ],
-    'Masala Dosa': [
-      '1. Prepare dosa batter as above.',
-      '2. Spread batter thinly on a hot griddle.',
-      '3. Cook until golden brown and crisp.',
-      '4. Serve with masala filling, sambar, and chutneys.',
+    'Chana Masala': [
+      '1. Soak chickpeas overnight and boil until tender.',
+      '2. Heat oil in a pan, add cumin seeds, and sauté onions and ginger-garlic paste.',
+      '3. Add tomato puree, spices, and cook until oil separates.',
+      '4. Add boiled chickpeas and simmer for 15 minutes. Garnish with cilantro and serve.',
     ],
-    Poha: [
-      '1. Rinse thick poha (flattened rice) lightly.',
-      '2. Sauté mustard seeds, curry leaves, and onions.',
-      '3. Add turmeric, salt, and poha.',
-      '4. Garnish with cilantro and lemon juice.',
+    'Vegetable Biryani': [
+      '1. Soak basmati rice for 30 minutes.',
+      '2. Sauté vegetables with spices in a pan.',
+      '3. Layer rice and vegetables in a pot, add saffron milk, and cook on low heat until rice is done.',
+      '4. Garnish with fried onions and cilantro. Serve with raita.',
     ],
-    'Butter Naan': [
-      '1. Mix flour, yeast, sugar, and salt.',
-      '2. Add warm water and knead into a soft dough.',
-      '3. Let the dough rest for 1-2 hours.',
-      '4. Roll out the naan and cook on a hot tawa or in a tandoor.',
-      '5. Brush with butter and serve.',
+    'Dal Makhani': [
+      '1. Soak black lentils and kidney beans overnight and boil until tender.',
+      '2. Heat butter in a pan, add ginger-garlic paste, and sauté.',
+      '3. Add tomato puree, spices, and cook until oil separates.',
+      '4. Add boiled lentils and beans, cream, and simmer for 30 minutes. Garnish with butter and serve.',
+    ],
+    'Vegetable Korma': [
+      '1. Heat oil in a pan, add cumin seeds, and sauté onions and ginger-garlic paste.',
+      '2. Add mixed vegetables and sauté for 5 minutes.',
+      '3. Add cashew paste, cream, spices, and simmer for 15 minutes. Garnish with nuts and serve.',
+    ],
+    'Butter Chicken': [
+      '1. Marinate chicken pieces with yogurt, ginger-garlic paste, and spices.',
+      '2. Grill or bake chicken until cooked.',
+      '3. Heat butter in a pan, add tomato puree, spices, and cook until oil separates.',
+      '4. Add grilled chicken, cream, and simmer for 10 minutes. Garnish with butter and cilantro. Serve with naan.',
+    ],
+    'Fish Curry': [
+      '1. Marinate fish pieces with turmeric, salt, and lemon juice.',
+      '2. Heat oil in a pan, add mustard seeds, curry leaves, and sauté onions.',
+      '3. Add tomato puree, spices, and cook until oil separates.',
+      '4. Add fish pieces and simmer for 10 minutes. Garnish with cilantro and serve with rice.',
+    ],
+    'Egg Curry': [
+      '1. Boil eggs and make slits on the surface.',
+      '2. Heat oil in a pan, add mustard seeds, curry leaves, and sauté onions.',
+      '3. Add tomato puree, spices, and cook until oil separates.',
+      '4. Add boiled eggs and simmer for 5 minutes. Garnish with cilantro and serve with rice.',
+    ],
+    'Mutton Rogan Josh': [
+      '1. Marinate mutton pieces with yogurt, ginger-garlic paste, and spices.',
+      '2. Heat oil in a pan, add bay leaves, and sauté onions until golden brown.',
+      '3. Add marinated mutton and cook until browned.',
+      '4. Add Kashmiri chili powder, spices, and cook until oil separates. Simmer until mutton is tender. Garnish with cilantro and serve with rice.',
+    ],
+    'Chicken Tikka Masala': [
+      '1. Marinate chicken pieces with yogurt, ginger-garlic paste, and spices.',
+      '2. Grill or bake chicken until cooked.',
+      '3. Heat oil in a pan, add tomato puree, spices, and cook until oil separates.',
+      '4. Add grilled chicken, cream, and simmer for 10 minutes. Garnish with cilantro and serve with naan.',
     ],
   };
 
@@ -44,7 +78,7 @@ interface InstructionsPageProps {
 }
 
 export default function InstructionsPage({searchParams}: InstructionsPageProps) {
-  const {dish} = searchParams;
+  const {dish} = use(Promise.resolve(searchParams));
   const [instructions, setInstructions] = useState<string[]>([]);
 
   useEffect(() => {
