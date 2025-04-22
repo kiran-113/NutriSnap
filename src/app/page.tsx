@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,7 @@ const isNonVeg = (foodName: string) => {
 };
 
 export default function Home() {
+  // Using a vibrant gradient background on the container WITHOUT any transition
   const [image, setImageUrl] = useState<File | null>(null);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageType, setImageType] = useState<string>('');
@@ -47,7 +48,8 @@ export default function Home() {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-green-400 to-blue-500 shadow-xl');
+  // Removed transition classes to avoid background fading.
+  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   useEffect(() => {
@@ -116,8 +118,7 @@ export default function Home() {
     setLoadingFood(true);
     try {
       const result = await identifyFood({ imageUrl: imageDataUrl, imageType });
-      const identifiedFoodItems = result.foodItems.map((foodItem: string) => ({ name: foodItem, quantity: '' }));
-      setFoodItems(identifiedFoodItems);
+      setFoodItems(result.foodItems.map((foodItem: string) => ({ name: foodItem, quantity: '' })));
       toast({
         title: 'Food Identified!',
         description: 'Food items identified successfully.',
@@ -194,7 +195,7 @@ export default function Home() {
   };
 
   return (
-    <div className={cn("container mx-auto p-4 transition-colors duration-500", themeColor)}>
+    <div className={cn('container mx-auto p-4', themeColor)}>
       <div className="flex justify-between items-center mb-4">
         <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
@@ -218,58 +219,43 @@ export default function Home() {
             className="w-full aspect-video rounded-md shadow-lg"
           />
         ) : (
-          <div className="w-full aspect-video rounded-md bg-gray-100 flex items-center justify-center">
-            {!hasCameraPermission && isCameraActive ? (
-              <Alert variant="destructive">
-                <AlertTitle>Camera Access Required</AlertTitle>
-                <AlertDescription>
-                  Please allow camera access to use this feature.
-                </AlertDescription>
-              </Alert>
-            ) : isCameraActive ? (
-              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
-            ) : (
-              <div className="text-center p-4">
-                <p className="font-medium">No image captured or selected</p>
-                <p>Please capture or upload an image to continue.</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+          <>
+            <p>Upload image or take pic</p>
+            <div className="flex space-x-2 mb-4">
+              {!isCameraActive && (
+                <Button
+                  variant="secondary"
+                  onClick={enableCamera}
+                  disabled={hasCameraPermission}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                >
+                  <Camera className="mr-2 h-4 w-4" />
+                  Enable Camera
+                </Button>
+              )}
+              {isCameraActive && (
+                <Button
+                  variant="secondary"
+                  onClick={handleCapture}
+                  disabled={!hasCameraPermission}
+                  className="bg-green-500 hover:bg-green-600 text-white"
+                >
+                  <Camera className="mr-2 h-4 w-4" />
+                  Capture Image
+                </Button>
+              )}
 
-      <div className="flex space-x-2 mb-4">
-        {!isCameraActive && (
-          <Button
-            variant="secondary"
-            onClick={enableCamera}
-            disabled={hasCameraPermission}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white"
-          >
-            <Camera className="mr-2 h-4 w-4" />
-            Enable Camera
-          </Button>
-        )}
-        {isCameraActive && (
-          <Button
-            variant="secondary"
-            onClick={handleCapture}
-            disabled={!hasCameraPermission}
-            className="bg-green-500 hover:bg-green-600 text-white"
-          >
-            <Camera className="mr-2 h-4 w-4" />
-            Capture Image
-          </Button>
-        )}
+              <Button variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
+                <Label htmlFor="image" className="flex items-center cursor-pointer">
+                  <Upload className="mr-2 h-4 w-4" />
+                  Choose Image
+                </Label>
+              </Button>
 
-        <Button variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
-          <Label htmlFor="image" className="flex items-center cursor-pointer">
-            <Upload className="mr-2 h-4 w-4" />
-            Choose Image
-          </Label>
-        </Button>
-
-        <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
+              <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
+            </div>
+          </>
+        )}
       </div>
 
       <div className="mb-4">
