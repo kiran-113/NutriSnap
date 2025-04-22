@@ -126,7 +126,24 @@ export default function Home() {
     setLoadingNutrition(true);
     try {
       const result = await generateNutritionalInformation({foodItems});
-      setNutritionalInfo(result.nutritionalSummary);
+      if (!result.summary) {
+        throw new Error('Failed to generate nutritional summary or summary is missing');
+      }
+
+      // Format the nutritional information into a human-readable string
+      const formattedNutrition = `
+Calories: ${result.summary.calories}
+Protein: ${result.summary.protein}
+Carbohydrates: ${result.summary.carbohydrates}
+Fiber: ${result.summary.fiber}
+Calcium: ${result.summary.calcium}
+Iron: ${result.summary.iron}
+Vitamin B: ${result.summary.vitaminB}
+Vitamin C: ${result.summary.vitaminC}
+Overall: ${result.summary.overall}
+      `;
+
+      setNutritionalInfo(formattedNutrition);
       toast({
         title: 'Nutritional Info Generated!',
         description: 'Nutritional information generated successfully.',
