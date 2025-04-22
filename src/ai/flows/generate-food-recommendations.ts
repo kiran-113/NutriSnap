@@ -55,7 +55,7 @@ const prompt = ai.definePrompt({
       })).describe('A list of recommended food items.'),
     }),
   },
-  prompt: `You are a nutritional expert. Based on the nutrient theme and food themes, provide a list of 5 food items and 5 dish. For each food item and dish, provide a brief description of its nutritional benefits and the approximate amount of the key nutrient. Be specific and provide accurate nutrient values.
+  prompt: `You are a nutritional expert. Based on the nutrient theme and food themes, provide a list of 5 food items and 5 dishes. For each food item and dish, provide a brief description of its nutritional benefits and the approximate amount of the key nutrient. Be specific and provide accurate nutrient values.
   Follow the constraints for the sample data.
 
 Nutrient Theme: {{nutrientTheme}}
@@ -78,18 +78,18 @@ If nutrientTheme is Protein and foodThemes include Non-Veg:
 
 Sample Dishes:
 If nutrientTheme is Protein and foodThemes include Veg:
-- Dish: Lentil Soup. Description: Lentil soup is a hearty and nutritious dish, packed with plant-based protein and fiber for sustained energy. Nutrient Amount: Approximately 18g of protein per serving.
-- Dish: Chickpea Curry. Description: Chickpea curry is a flavorful and protein-rich dish, providing essential amino acids and digestive benefits. Nutrient Amount: Approximately 15g of protein per serving.
-- Dish: Tofu Stir-Fry. Description: Tofu stir-fry is a versatile and protein-packed meal, offering essential amino acids and support for muscle health. Nutrient Amount: Approximately 20g of protein per serving.
-- Dish: Quinoa Salad. Description: Quinoa salad is a refreshing and protein-rich dish, providing complete amino acids and promoting muscle synthesis. Nutrient Amount: Approximately 12g of protein per serving.
-- Dish: Spinach and Ricotta Stuffed Shells. Description: Spinach and ricotta stuffed shells are a comforting and protein-rich dish, offering essential nutrients for overall health. Nutrient Amount: Approximately 25g of protein per serving.
+- Dish: Palak Paneer. Description: Palak Paneer is a classic vegetarian dish made with spinach and Indian cheese, providing a good source of protein and iron. Nutrient Amount: Approximately 15g of protein per serving.
+- Dish: Chana Masala. Description: Chana Masala is a flavorful chickpea curry, offering a hearty dose of plant-based protein and fiber. Nutrient Amount: Approximately 12g of protein per serving.
+- Dish: Vegetable Biryani. Description: Vegetable Biryani is a fragrant rice dish packed with various vegetables, providing a balanced source of carbohydrates and some protein. Nutrient Amount: Approximately 7g of protein per serving.
+- Dish: Dal Makhani. Description: Dal Makhani is a creamy lentil dish, rich in protein and fiber, often simmered overnight for enhanced flavor. Nutrient Amount: Approximately 18g of protein per serving.
+- Dish: Vegetable Korma. Description: Vegetable Korma is a mild and creamy curry made with mixed vegetables, offering a source of protein and various vitamins and minerals. Nutrient Amount: Approximately 5g of protein per serving.
 
 If nutrientTheme is Protein and foodThemes include Non-Veg:
-- Dish: Chicken Stir-Fry. Description: Chicken stir-fry is a quick and protein-packed meal, delivering essential amino acids for muscle repair and growth. Nutrient Amount: Approximately 30g of protein per serving.
-- Dish: Salmon with Roasted Vegetables. Description: Salmon with roasted vegetables is a wholesome and protein-rich dish, providing omega-3 fatty acids and support for heart health. Nutrient Amount: Approximately 25g of protein per serving.
-- Dish: Egg Omelette with Cheese and Vegetables. Description: Egg omelette with cheese and vegetables is a versatile and protein-rich dish, offering essential nutrients for a balanced diet. Nutrient Amount: Approximately 18g of protein per serving.
-- Dish: Tuna Salad Sandwich. Description: Tuna salad sandwich is a convenient and protein-packed meal, providing essential amino acids and promoting muscle maintenance. Nutrient Amount: Approximately 22g of protein per serving.
-- Dish: Greek Yogurt Parfait with Berries and Nuts. Description: Greek yogurt parfait with berries and nuts is a nutritious and protein-rich snack, supporting digestion and muscle growth. Nutrient Amount: Approximately 15g of protein per serving.
+- Dish: Butter Chicken. Description: Butter Chicken is a popular Indian dish made with tender chicken pieces in a creamy tomato-based sauce, providing a rich source of protein. Nutrient Amount: Approximately 30g of protein per serving.
+- Dish: Fish Curry. Description: Fish Curry is a flavorful dish made with fish simmered in a spicy and tangy sauce, offering a good source of protein and omega-3 fatty acids. Nutrient Amount: Approximately 25g of protein per serving.
+- Dish: Egg Curry. Description: Egg Curry is a simple and nutritious dish made with boiled eggs in a flavorful gravy, providing a complete source of protein. Nutrient Amount: Approximately 20g of protein per serving.
+- Dish: Mutton Rogan Josh. Description: Mutton Rogan Josh is an aromatic lamb dish with a rich and flavorful gravy, providing a substantial amount of protein. Nutrient Amount: Approximately 35g of protein per serving.
+- Dish: Chicken Tikka Masala. Description: Chicken Tikka Masala is a popular dish made with grilled chicken pieces in a creamy, spiced tomato sauce, offering a good source of protein. Nutrient Amount: Approximately 28g of protein per serving.
 `,
 });
 
