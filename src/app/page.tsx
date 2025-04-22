@@ -195,9 +195,9 @@ export default function Home() {
   };
 
   return (
-    <div className={cn("container mx-auto p-4", themeColor)}>
+    <div className={cn('container mx-auto p-4', themeColor)}>
       <div className="flex justify-between items-center mb-4">
-        <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
+        <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
           <Button
             variant="outline"
@@ -207,7 +207,7 @@ export default function Home() {
           </Button>
         </Link>
       </div>
-      <h2 className="mb-4 text-2xl font-semibold text-yellow-300 drop-shadow-md">
+      <h2 className="mb-4 text-2xl font-semibold text-white drop-shadow-md">
         Effortlessly track your nutrition!
       </h2>
 
@@ -219,22 +219,8 @@ export default function Home() {
             className="w-full aspect-video rounded-md shadow-lg"
           />
         ) : (
-          <div className="w-full aspect-video rounded-md bg-gray-100 flex items-center justify-center">
-            {!hasCameraPermission && isCameraActive ? (
-              <Alert variant="destructive">
-                <AlertTitle>Camera Access Required</AlertTitle>
-                <AlertDescription>
-                  Please allow camera access to use this feature.
-                </AlertDescription>
-              </Alert>
-            ) : isCameraActive ? (
-              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
-            ) : (
-              <div className="text-center p-4">
-                <p className="font-medium">No image captured or selected</p>
-                <p>Please capture or upload an image to continue.</p>
-              </div>
-            )}
+          <div className="text-center p-4">
+            <p className="font-medium text-white">Upload image or take picture to continue.</p>
           </div>
         )}
       </div>
@@ -285,7 +271,7 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Food Items</h3>
+        <h3 className="text-lg font-semibold mb-2 text-white">Food Items</h3>
         {foodItems.map((item, index) => (
           <div
             key={index}
@@ -333,60 +319,60 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Nutritional Information</h3>
+        <h3 className="text-lg font-semibold mb-2 text-white">Nutritional Information</h3>
         {nutritionalInfo ? (
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <p className="font-medium text-yellow-300">Calories</p>
+              <p className="font-medium text-white">Calories</p>
               <Textarea readOnly value={nutritionalInfo.calories} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Protein</p>
+              <p className="font-medium text-white">Protein</p>
               <Textarea readOnly value={nutritionalInfo.protein} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Carbohydrates</p>
+              <p className="font-medium text-white">Carbohydrates</p>
               <Textarea readOnly value={nutritionalInfo.carbohydrates} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Fiber</p>
+              <p className="font-medium text-white">Fiber</p>
               <Textarea readOnly value={nutritionalInfo.fiber} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Calcium</p>
+              <p className="font-medium text-white">Calcium</p>
               <Textarea readOnly value={nutritionalInfo.calcium} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Iron</p>
+              <p className="font-medium text-white">Iron</p>
               <Textarea readOnly value={nutritionalInfo.iron} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin A</p>
+              <p className="font-medium text-white">Vitamin A</p>
               <Textarea readOnly value={nutritionalInfo.vitaminA} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin B</p>
+              <p className="font-medium text-white">Vitamin B</p>
               <Textarea readOnly value={nutritionalInfo.vitaminB} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin C</p>
+              <p className="font-medium text-white">Vitamin C</p>
               <Textarea readOnly value={nutritionalInfo.vitaminC} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin D</p>
+              <p className="font-medium text-white">Vitamin D</p>
               <Textarea readOnly value={nutritionalInfo.vitaminD} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Potassium</p>
+              <p className="font-medium text-white">Potassium</p>
               <Textarea readOnly value={nutritionalInfo.potassium} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Overall Nutritional Information</p>
+              <p className="font-medium text-white">Overall Nutritional Information</p>
               <Textarea readOnly value={nutritionalInfo.overall} />
             </div>
           </div>
         ) : (
-          <p className="text-yellow-300">No nutritional information generated yet.</p>
+          null
         )}
       </div>
 
@@ -402,7 +388,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-between items-center mb-4">
-        <p className="text-yellow-300">
+        <p className="text-white">
           Powered by <span className="font-bold">Firebase</span> | AI features powered by{' '}
           <span className="font-bold">Genkit</span>
         </p>
