@@ -69,9 +69,10 @@ export default function ThemePage() {
               <Label htmlFor="seafood">Seafood</Label>
             </div>
           </RadioGroup>
-          <Link href="/">
-            <Button variant="outline">Switch to Previous Mode</Button>
-          </Link>
+          
+            <Link href="/" className="flex justify-end">
+              <Button variant="outline">Switch to Previous Mode</Button>
+            </Link>
         </CardContent>
       </Card>
     </div>
