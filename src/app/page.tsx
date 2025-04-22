@@ -13,6 +13,7 @@ import {useToast} from '@/hooks/use-toast';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Camera, Upload } from "lucide-react";
 import {Switch} from "@/components/ui/switch";
+import {estimateFoodWeight} from "@/ai/flows/estimate-food-weight";
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
@@ -37,7 +38,8 @@ export default function Home() {
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
   const [vegMode, setVegMode] = useState(true);
-  const [pageColor, setPageColor] = useState("bg-green-200");
+  const [pageColor, setPageColor] = useState("bg-green-300 shadow-md");
+  const [weightEstimationLoading, setWeightEstimationLoading] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -55,10 +57,10 @@ export default function Home() {
     const hasNonVeg = foodItems.some(item => isNonVegItem(item.name));
 
     if (hasNonVeg) {
-      setPageColor("bg-red-300"); // Set to red if non-veg item is present
+      setPageColor("bg-red-300 shadow-md"); // Set to red if non-veg item is present
     } else {
       // Set to green or orange based on vegMode
-      setPageColor(vegMode ? "bg-green-300" : "bg-orange-300");
+      setPageColor(vegMode ? "bg-green-300 shadow-md" : "bg-orange-300 shadow-md");
     }
   }, [foodItems, vegMode]);
 
@@ -168,7 +170,7 @@ export default function Home() {
       toast({
         title: 'Nutritional Info Generated!',
         description: 'Nutritional information generated successfully.',
-      });
+       });
     } catch (error: any) {
       console.error('Error generating nutrition info:', error);
       toast({
@@ -181,10 +183,28 @@ export default function Home() {
     }
   };
 
-  const handleFoodItemChange = (index: number, field: 'name' | 'quantity', value: string) => {
+  const handleFoodItemChange = async (index: number, field: 'name' | 'quantity', value: string) => {
     const newFoodItems = [...foodItems];
     newFoodItems[index][field] = value;
     setFoodItems(newFoodItems);
+
+    if (field === 'name' && value !== '' && newFoodItems[index]['quantity'] === '') {
+      setWeightEstimationLoading(true);
+      try {
+        const result = await estimateFoodWeight({ foodItemName: value });
+        newFoodItems[index]['quantity'] = result.estimatedWeight;
+        setFoodItems(newFoodItems);
+      } catch (error: any) {
+        console.error('Error estimating weight:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error Estimating Weight',
+          description: error.message,
+        });
+      } finally {
+        setWeightEstimationLoading(false);
+      }
+    }
   };
 
   const handleAddFoodItem = () => {
@@ -424,5 +444,4 @@ export default function Home() {
     </div>
   );
 }
-
 
