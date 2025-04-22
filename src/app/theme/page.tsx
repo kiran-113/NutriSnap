@@ -1,20 +1,20 @@
 'use client';
 
-import {useState, useRef, useEffect} from 'react';
-import {Button, buttonVariants} from '@/components/ui/button';
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {identifyFood} from '@/ai/flows/identify-food-from-image';
-import {generateNutritionalInformation} from '@/ai/flows/generate-nutritional-information';
-import {Textarea} from '@/components/ui/textarea';
-import {cn} from '@/lib/utils';
-import {useToast} from '@/hooks/use-toast';
-import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {Camera, Check, Upload} from 'lucide-react';
-import {estimateFoodWeight} from '@/ai/flows/estimate-food-weight';
+import { useState, useRef, useEffect } from 'react';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { identifyFood } from '@/ai/flows/identify-food-from-image';
+import { generateNutritionalInformation } from '@/ai/flows/generate-nutritional-information';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Camera, Check, Upload } from 'lucide-react';
+import { estimateFoodWeight } from '@/ai/flows/estimate-food-weight';
 import Link from 'next/link';
-import {useRouter, useSearchParams} from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   RadioGroup,
   RadioGroupItem,
@@ -116,22 +116,18 @@ export default function Theme() {
         Select Food Themes
         
           
-
           Veg
         
         
           
-
           Non-Veg
         
         
           
-
           Egg
         
         
           
-
           Seafood
         
       
@@ -144,4 +140,3 @@ export default function Theme() {
     
   );
 }
-
