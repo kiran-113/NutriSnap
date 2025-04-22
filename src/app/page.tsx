@@ -291,7 +291,7 @@ export default function Home() {
                 <img src={imageUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
               </div>
             )}
-            <Button disabled={!imageUrl || loadingFood} onClick={handleIdentifyFood} className="bg-primary text-primary-foreground hover:bg-primary/80">
+            <Button disabled={!imageUrl || loadingFood} onClick={handleIdentifyFood} className="bg-accent text-accent-foreground hover:bg-accent/80">
               {loadingFood ? 'Identifying...' : 'Identify Food'}
             </Button>
           </div>
@@ -363,7 +363,7 @@ export default function Home() {
           <CardTitle>Nutritional Information</CardTitle>
           <CardDescription>Estimated calories, vitamins, and minerals.</CardDescription>
         </CardHeader>
-        <CardContent>
+         <CardContent>
           <Button disabled={!foodItems.every(item => item.name && item.quantity) || loadingNutrition} onClick={handleGenerateNutrition} className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4">
             {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
           </Button>
