@@ -155,16 +155,14 @@ export default function ThemePage() {
           </div>
         </CardContent>
       </Card>
-       {foodRecommendations ? (
-        <div>
-          <h3>Recommended Foods:</h3>
-          <ul>
-            {foodRecommendations.map((food, index) => (
-              <li key={index}>
-                <strong>{food.name}</strong>: {food.description}
-              </li>
-            ))}
-          </ul>
+      {foodRecommendations ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {foodRecommendations.map((food, index) => (
+            <div key={index} className="bg-blue-100 p-4 rounded-md shadow-md">
+              <strong className="block font-semibold">{food.name}</strong>
+              <p className="text-sm">{food.description}</p>
+            </div>
+          ))}
         </div>
       ) : (
         <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
