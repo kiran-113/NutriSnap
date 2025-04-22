@@ -24,7 +24,7 @@ export type GenerateFoodRecommendationsInput = z.infer<
 const GenerateFoodRecommendationsOutputSchema = z.object({
   recommendedFoods: z.array(z.object({
     name: z.string().describe('The name of the recommended food item.'),
-    description: z.string().describe('A brief description of the food item and its nutritional benefits.'),
+    description: z.string().describe('A brief description of the food item and its nutritional benefits, as well as general instructions.'),
     nutrientAmount: z.string().describe('The amount of the specified nutrient in the food item (e.g., "10g of protein", "200 calories").'),
   })).describe('A list of recommended food items.'),
 });
@@ -50,13 +50,14 @@ const prompt = ai.definePrompt({
     schema: z.object({
       recommendedFoods: z.array(z.object({
         name: z.string().describe('The name of the recommended food item.'),
-        description: z.string().describe('A brief description of the food item and its nutritional benefits.'),
+        description: z.string().describe('A brief description of the food item and its nutritional benefits, as well as general instructions.'),
         nutrientAmount: z.string().describe('The amount of the specified nutrient in the food item (e.g., "10g of protein", "200 calories").'),
       })).describe('A list of recommended food items.'),
     }),
   },
-  prompt: `You are a nutritional expert. Based on the nutrient theme and food themes, provide a list of 5 food items and 5 dishes. For each food item and dish, provide a brief description of its nutritional benefits and the approximate amount of the key nutrient. Be specific and provide accurate nutrient values.
+  prompt: `You are a nutritional expert. Based on the nutrient theme and food themes, provide a list of 5 food items and 5 dishes. For each food item and dish, provide a brief description of its nutritional benefits and the approximate amount of the key nutrient. Be specific and provide accurate nutrient values. For the dish, provide general instructions if possible
   Follow the constraints for the sample data.
+  Make sure that the dishes that you recommend are actual dishes, with cooking instructions that are easily found online.
 
 Nutrient Theme: {{nutrientTheme}}
 Food Themes: {{#each foodThemes}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
@@ -78,18 +79,18 @@ If nutrientTheme is Protein and foodThemes include Non-Veg:
 
 Sample Dishes:
 If nutrientTheme is Protein and foodThemes include Veg:
-- Dish: Palak Paneer. Description: Palak Paneer is a classic vegetarian dish made with spinach and Indian cheese, providing a good source of protein and iron. The spinach provides vitamins A and C, while the paneer offers calcium and protein. Nutrient Amount: Approximately 15g of protein per serving.
-- Dish: Chana Masala. Description: Chana Masala is a flavorful chickpea curry, offering a hearty dose of plant-based protein and fiber. The chickpeas provide iron and folate, while the spices offer antioxidants. Nutrient Amount: Approximately 12g of protein per serving.
-- Dish: Vegetable Biryani. Description: Vegetable Biryani is a fragrant rice dish packed with various vegetables, providing a balanced source of carbohydrates and some protein. The vegetables contribute vitamins and minerals, while the rice provides energy. Nutrient Amount: Approximately 7g of protein per serving.
-- Dish: Dal Makhani. Description: Dal Makhani is a creamy lentil dish, rich in protein and fiber, often simmered overnight for enhanced flavor. The lentils provide iron and folate, while the cream and butter add richness. Nutrient Amount: Approximately 18g of protein per serving.
-- Dish: Paneer Butter Masala. Description: Paneer Butter Masala is a rich and creamy dish made with paneer (Indian cheese) in a tomato-based sauce, providing a good source of protein and calcium. The tomato sauce provides vitamins and antioxidants, while the paneer offers protein and calcium. Nutrient Amount: Approximately 20g of protein per serving.
+- Dish: Palak Paneer. Description: Palak Paneer is a classic vegetarian dish made with spinach and Indian cheese, providing a good source of protein and iron. The spinach provides vitamins A and C, while the paneer offers calcium and protein. General instructions: Sauté spinach and add paneer cubes. Simmer in a tomato-based sauce with spices and cream. Nutrient Amount: Approximately 15g of protein per serving.
+- Dish: Chana Masala. Description: Chana Masala is a flavorful chickpea curry, offering a hearty dose of plant-based protein and fiber. The chickpeas provide iron and folate, while the spices offer antioxidants. General instructions: Soak chickpeas overnight, then cook with onions, tomatoes, and a blend of spices. Simmer until tender. Nutrient Amount: Approximately 12g of protein per serving.
+- Dish: Vegetable Biryani. Description: Vegetable Biryani is a fragrant rice dish packed with various vegetables, providing a balanced source of carbohydrates and some protein. The vegetables contribute vitamins and minerals, while the rice provides energy. General instructions: Layer rice and mixed vegetables with spices and herbs. Cook on low heat until rice is fluffy. Nutrient Amount: Approximately 7g of protein per serving.
+- Dish: Dal Makhani. Description: Dal Makhani is a creamy lentil dish, rich in protein and fiber, often simmered overnight for enhanced flavor. The lentils provide iron and folate, while the cream and butter add richness. General instructions: Simmer black lentils and kidney beans overnight with butter, cream, and spices. Nutrient Amount: Approximately 18g of protein per serving.
+- Dish: Paneer Butter Masala. Description: Paneer Butter Masala is a rich and creamy dish made with paneer (Indian cheese) in a tomato-based sauce, providing a good source of protein and calcium. The tomato sauce provides vitamins and antioxidants, while the paneer offers protein and calcium. General instructions: Sauté paneer cubes and simmer in a creamy tomato-based sauce with butter and spices. Nutrient Amount: Approximately 20g of protein per serving.
 
 If nutrientTheme is Protein and foodThemes include Non-Veg:
-- Dish: Butter Chicken. Description: Butter Chicken is a popular Indian dish made with tender chicken pieces in a creamy tomato-based sauce, providing a rich source of protein. It is best enjoyed with naan or rice and offers a comforting and flavorful meal. The chicken provides protein and B vitamins, while the creamy sauce adds richness. Nutrient Amount: Approximately 30g of protein per serving.
-- Dish: Fish Curry. Description: Fish Curry is a flavorful dish made with fish simmered in a spicy and tangy sauce, offering a good source of protein and omega-3 fatty acids. The fish provides protein and omega-3 fatty acids, while the spices add flavor and antioxidants. Nutrient Amount: Approximately 25g of protein per serving.
-- Dish: Egg Curry. Description: Egg Curry is a simple and nutritious dish made with boiled eggs in a flavorful gravy, providing a complete source of protein. The eggs provide protein and essential amino acids, while the gravy adds flavor and nutrients. Nutrient Amount: Approximately 20g of protein per serving.
-- Dish: Mutton Rogan Josh. Description: Mutton Rogan Josh is an aromatic lamb dish with a rich and flavorful gravy, providing a substantial amount of protein. The lamb provides protein and iron, while the spices add warmth and depth of flavor. Nutrient Amount: Approximately 35g of protein per serving.
-- Dish: Chicken Tikka Masala. Description: Chicken Tikka Masala is a popular dish made with grilled chicken pieces in a creamy, spiced tomato sauce, offering a good source of protein. The chicken provides protein and B vitamins, while the creamy sauce adds richness and flavor. Nutrient Amount: Approximately 28g of protein per serving.
+- Dish: Butter Chicken. Description: Butter Chicken is a popular Indian dish made with tender chicken pieces in a creamy tomato-based sauce, providing a rich source of protein. General instructions: Marinate and grill chicken, then simmer in a tomato and butter-based sauce with cream and spices.  It is best enjoyed with naan or rice and offers a comforting and flavorful meal. The chicken provides protein and B vitamins, while the creamy sauce adds richness. Nutrient Amount: Approximately 30g of protein per serving.
+- Dish: Fish Curry. Description: Fish Curry is a flavorful dish made with fish simmered in a spicy and tangy sauce, offering a good source of protein and omega-3 fatty acids. General instructions: Marinate fish and simmer in a coconut milk-based curry with spices and vegetables. The fish provides protein and omega-3 fatty acids, while the spices add flavor and antioxidants. Nutrient Amount: Approximately 25g of protein per serving.
+- Dish: Egg Curry. Description: Egg Curry is a simple and nutritious dish made with boiled eggs in a flavorful gravy, providing a complete source of protein. General instructions: Boil and halve eggs, then simmer in an onion and tomato-based gravy with spices. The eggs provide protein and essential amino acids, while the gravy adds flavor and nutrients. Nutrient Amount: Approximately 20g of protein per serving.
+- Dish: Mutton Rogan Josh. Description: Mutton Rogan Josh is an aromatic lamb dish with a rich and flavorful gravy, providing a substantial amount of protein. General instructions: Braise mutton with yogurt, ginger, garlic, and aromatic spices until tender. The lamb provides protein and iron, while the spices add warmth and depth of flavor. Nutrient Amount: Approximately 35g of protein per serving.
+- Dish: Chicken Tikka Masala. Description: Chicken Tikka Masala is a popular dish made with grilled chicken pieces in a creamy, spiced tomato sauce, offering a good source of protein. General instructions: Marinate and grill chicken tikka, then simmer in a creamy tomato-based sauce with spices and herbs. The chicken provides protein and B vitamins, while the creamy sauce adds richness and flavor. Nutrient Amount: Approximately 28g of protein per serving.
 `,
 });
 
