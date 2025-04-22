@@ -10,7 +10,7 @@ export default function InstructionsPage() {
       <p>This page will provide instructions for preparing and enjoying specific food items.</p>
 
       {/* Add more content here as needed */}
-      <Link href="/">
+      <Link href="/theme">
         <Button variant="outline">Switch to Previous Mode</Button>
       </Link>
     </div>

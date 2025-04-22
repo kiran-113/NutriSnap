@@ -32,10 +32,10 @@ const isNonVeg = (foodName: string) => {
 };
 
 export default function Home() {
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImageUrl] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
-  const [foodItems, setFoodItems<{name: string; quantity: string}[]>([{name: '', quantity: ''}]);
+  const [foodItems, setFoodItems] = useState<{ name: string; quantity: string; }[]>([{name: '', quantity: ''}]);
   const [nutritionalInfo, setNutritionalInfo: any] = useState(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
@@ -80,13 +80,12 @@ export default function Home() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
-    setImage(file);
+    setImageUrl(URL.createObjectURL(file));
     setImageType(file.type);
     const reader = new FileReader();
     reader.onloadend = () => {
       setImageUrl(reader.result as string);
     };
-    reader.readAsDataURL(file);
   };
 
   const handleCaptureImage = async () => {
@@ -433,4 +432,3 @@ export default function Home() {
     </div>
   );
 }
-
