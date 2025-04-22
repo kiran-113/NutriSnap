@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config, {isServer}) => {
+    if (!isServer) {
+      config.ignoreWarnings = [
+        {
+          module: /@opentelemetry\/sdk-trace-node/,
+        },
+      ];
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
