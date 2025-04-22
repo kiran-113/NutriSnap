@@ -51,6 +51,24 @@ export default function ThemePage() {
               <Label htmlFor="iron">Iron</Label>
             </div>
           </RadioGroup>
+          <RadioGroup defaultValue={theme} onValueChange={handleThemeChange}>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="veg" id="veg" />
+              <Label htmlFor="veg">Veg</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="non-veg" id="non-veg" />
+              <Label htmlFor="non-veg">Non-Veg</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="egg" id="egg" />
+              <Label htmlFor="egg">Egg</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="seafood" id="seafood" />
+              <Label htmlFor="seafood">Seafood</Label>
+            </div>
+          </RadioGroup>
           <Link href="/">
             <Button variant="outline">Switch to Previous Mode</Button>
           </Link>
