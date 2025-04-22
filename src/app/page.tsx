@@ -46,6 +46,7 @@ export default function Home() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [themeColor, setThemeColor] = useState('bg-green-100 shadow-green-500/50');
+    const [isCameraActive, setIsCameraActive] = useState(false);
 
     useEffect(() => {
         // Function to load theme from local storage
@@ -59,29 +60,26 @@ export default function Home() {
         loadTheme();
     }, []);
 
-    useEffect(() => {
-        const getCameraPermission = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({video: true});
-                setHasCameraPermission(true);
+    const enableCamera = async () => {
+      setIsCameraActive(true); // Enable camera when button is clicked
+      try {
+          const stream = await navigator.mediaDevices.getUserMedia({video: true});
+          setHasCameraPermission(true);
 
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            } catch (error) {
-                console.error('Error accessing camera:', error);
-                setHasCameraPermission(false);
-                toast({
-                    variant: 'destructive',
-                    title: 'Camera Access Denied',
-                    description:
-                        'Please enable camera permissions in your browser settings to use this app.',
-                });
-            }
-        };
-
-        getCameraPermission();
-    }, [toast]);
+          if (videoRef.current) {
+              videoRef.current.srcObject = stream;
+          }
+      } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          toast({
+              variant: 'destructive',
+              title: 'Camera Access Denied',
+              description:
+                  'Please enable camera permissions in your browser settings to use this app.',
+          });
+      }
+  };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
@@ -110,6 +108,7 @@ export default function Home() {
                 .getTracks()
                 .forEach(track => track.stop());
         }
+        setIsCameraActive(false);
     };
 
     const handleIdentifyFood = async () => {
@@ -144,7 +143,6 @@ export default function Home() {
             if (!result.summary) {
                 throw new Error('Failed to generate nutritional summary or summary is missing');
             }
-
             setNutritionalInfo(result.summary);
             toast({
                 title: 'Nutritional Info Generated!',
@@ -190,7 +188,7 @@ export default function Home() {
 
     const handleAddFoodItem = () => {
 
-        setFoodItems([...foodItems, {name: '', quantity: ''}]);
+        setFoodItems([...foodItems, { name: '', quantity: '' }]);
     };
 
     const handleRemoveFoodItem = (index: number) => {
@@ -214,27 +212,49 @@ export default function Home() {
                     <img src={imageDataUrl} alt="Uploaded Food" className="w-full aspect-video rounded-md"/>
                 ) : (
                     <div className="w-full aspect-video rounded-md bg-gray-100 flex items-center justify-center">
-                        {!hasCameraPermission ? (
-                            <div className="text-center p-4">
-                                <p className="font-medium">Camera Access Required</p>
-                                <p>Please allow camera access to use this feature.</p>
-                            </div>
+                        {!hasCameraPermission && isCameraActive ? (
+                             <Alert variant="destructive">
+                                    <AlertTitle>Camera Access Required</AlertTitle>
+                                    <AlertDescription>
+                                        Please allow camera access to use this feature.
+                                    </AlertDescription>
+                            </Alert>
                         ) : (
+                          isCameraActive?(
                             <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted/>
-                        )}
+                          ):(
+                            <div className="text-center p-4">
+                                  <p className="font-medium">No image captured or selected</p>
+                                  <p>Please capture or upload an image to continue.</p>
+                              </div>
+                            )
+                         )}
                     </div>
                 )}
             </div>
 
             <div className="flex space-x-2 mb-4">
+              {!isCameraActive && (
                 <Button
                     variant="secondary"
-                    onClick={handleCapture}
-                    disabled={!hasCameraPermission}
+                    onClick={enableCamera}
+                    disabled={hasCameraPermission}
                 >
                     <Camera className="mr-2 h-4 w-4"/>
-                    Capture Image
+                    Enable Camera
                 </Button>
+              )}
+               {isCameraActive && (
+                   <Button
+                       variant="secondary"
+                       onClick={handleCapture}
+                       disabled={!hasCameraPermission}
+                   >
+                       <Camera className="mr-2 h-4 w-4"/>
+                       Capture Image
+                   </Button>
+               )}
+
                 <Button variant="secondary">
                     <Label htmlFor="image" className="flex items-center cursor-pointer">
                         <Upload className="mr-2 h-4 w-4"/>
@@ -243,7 +263,7 @@ export default function Home() {
                 </Button>
 
                 <Input id="image" type="file" className="hidden" onChange={handleImageUpload}/>
-            </div>
+              </div>
 
             <div className="mb-4">
                 <Button
@@ -378,3 +398,4 @@ export default function Home() {
         </div>
     );
 }
+
