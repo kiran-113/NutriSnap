@@ -1,5 +1,5 @@
 'use client';
- 
+
  import {useState, useRef, useEffect} from 'react';
  import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
@@ -22,15 +22,42 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
  const Toaster = dynamic(() => import('@/components/ui/toaster').then(mod => mod.Toaster), {
    ssr: false,
 @@ -25,7 +26,7 @@
+   const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
+   const [isCameraActive, setIsCameraActive] = useState(false);
+   const [selectedNutrient, setSelectedNutrient] = useState<string | null>(null);
+- 
++
+   const [foodTheme, setFoodTheme] = useState({
+     veg: false,
+     nonVeg: false,
+@@ -33,7 +34,7 @@
+     seafood: false,
+     all: false,
+   });
+- 
++
+   const [recommendedFoods, setRecommendedFoods] = useState<any>(null);
+   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   
+@@ -41,7 +42,7 @@
+     const loadTheme = () => {
+       const storedTheme = localStorage.getItem('theme');
+       if (storedTheme) {
+- 
++
+         setThemeColor(storedTheme);
+       }
+     };
+@@ -49,7 +50,7 @@
+     loadTheme();
+   }, []);
   
-  
--          Diet & Nutri Directive
-+          Diet & Nutri Directive
-         
- 
-         
-@@ -147,6 +148,7 @@
+- 
++
+   const handleNutrientChange = (value: string) => {
+     setSelectedNutrient(value);
+   };
+@@ -141,6 +142,7 @@
            Switch to Previous Mode
          </Button>
        
@@ -38,14 +65,14 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
  
        
          Food Items
-@@ -201,7 +203,7 @@
+@@ -195,7 +198,7 @@
    );
  
  
- 
- 
+- 
 +
  
  
  
+
 
