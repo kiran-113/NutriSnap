@@ -25,6 +25,7 @@ const GenerateFoodRecommendationsOutputSchema = z.object({
   recommendedFoods: z.array(z.object({
     name: z.string().describe('The name of the recommended food item.'),
     description: z.string().describe('A brief description of the food item and its nutritional benefits.'),
+    nutrientAmount: z.string().describe('The amount of the specified nutrient in the food item (e.g., "10g of protein", "200 calories").'),
   })).describe('A list of recommended food items.'),
 });
 export type GenerateFoodRecommendationsOutput = z.infer<
@@ -50,6 +51,7 @@ const prompt = ai.definePrompt({
       recommendedFoods: z.array(z.object({
         name: z.string().describe('The name of the recommended food item.'),
         description: z.string().describe('A brief description of the food item and its nutritional benefits.'),
+        nutrientAmount: z.string().describe('The amount of the specified nutrient in the food item (e.g., "10g of protein", "200 calories").'),
       })).describe('A list of recommended food items.'),
     }),
   },
@@ -58,7 +60,7 @@ const prompt = ai.definePrompt({
 Nutrient Theme: {{nutrientTheme}}
 Food Themes: {{#each foodThemes}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-Provide a brief description of each food item and its nutritional benefits related to the specified nutrient theme.
+For each food item, provide a brief description of its nutritional benefits related to the specified nutrient theme and include the approximate amount of the key nutrient (e.g., "10g of protein", "200 calories").
 `,
 });
 

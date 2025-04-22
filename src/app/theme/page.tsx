@@ -161,6 +161,7 @@ export default function ThemePage() {
             <div key={index} className="bg-blue-100 p-4 rounded-md shadow-md">
               <strong className="block font-semibold">{food.name}</strong>
               <p className="text-sm">{food.description}</p>
+              <p className="text-sm"><b>Nutrient Amount:</b> {food.nutrientAmount}</p>
             </div>
           ))}
         </div>
