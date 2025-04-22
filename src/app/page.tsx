@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -34,7 +34,6 @@ const isNonVeg = (foodName: string) => {
 };
 
 export default function Home() {
-  // Using a vibrant gradient background on the container WITHOUT any transition
   const [image, setImageUrl] = useState<File | null>(null);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageType, setImageType] = useState<string>('');
@@ -48,7 +47,6 @@ export default function Home() {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  // Removed transition classes to avoid background fading.
   const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-green-400 to-blue-500 shadow-xl');
   const [isCameraActive, setIsCameraActive] = useState(false);
 
@@ -120,14 +118,6 @@ export default function Home() {
       const result = await identifyFood({ imageUrl: imageDataUrl, imageType });
       const identifiedFoodItems = result.foodItems.map((foodItem: string) => ({ name: foodItem, quantity: '' }));
       setFoodItems(identifiedFoodItems);
-
-      // Determine theme based on identified food items
-      let newThemeColor = 'bg-gradient-to-r from-green-400 to-blue-500 shadow-xl'; // Default
-      if (identifiedFoodItems.some(item => isNonVeg(item.name))) {
-        newThemeColor = 'bg-gradient-to-r from-red-400 to-orange-500 shadow-xl';
-      }
-      setThemeColor(newThemeColor);
-
       toast({
         title: 'Food Identified!',
         description: 'Food items identified successfully.',
@@ -204,9 +194,9 @@ export default function Home() {
   };
 
   return (
-    <div className={cn("container mx-auto p-4 text-white", themeColor, "transition-all duration-300")}>
+    <div className={cn("container mx-auto p-4 transition-colors duration-500", themeColor)}>
       <div className="flex justify-between items-center mb-4">
-        <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
+        <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
           <Button
             variant="outline"
@@ -216,7 +206,7 @@ export default function Home() {
           </Button>
         </Link>
       </div>
-      <h2 className="mb-4 text-2xl font-semibold text-yellow-300 drop-shadow-md">
+      <h2 className="mb-4 text-2xl font-semibold text-white drop-shadow-md">
         Effortlessly track your nutrition!
       </h2>
 
@@ -254,7 +244,7 @@ export default function Home() {
             variant="secondary"
             onClick={enableCamera}
             disabled={hasCameraPermission}
-            className="bg-blue-500 hover:bg-blue-600 text-white"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white"
           >
             <Camera className="mr-2 h-4 w-4" />
             Enable Camera
@@ -294,7 +284,7 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Food Items</h3>
+        <h3 className="text-lg font-semibold mb-2 text-white">Food Items</h3>
         {foodItems.map((item, index) => (
           <div
             key={index}
@@ -342,60 +332,60 @@ export default function Home() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Nutritional Information</h3>
+        <h3 className="text-lg font-semibold mb-2 text-white">Nutritional Information</h3>
         {nutritionalInfo ? (
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <p className="font-medium text-yellow-300">Calories</p>
+              <p className="font-medium text-white">Calories</p>
               <Textarea readOnly value={nutritionalInfo.calories} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Protein</p>
+              <p className="font-medium text-white">Protein</p>
               <Textarea readOnly value={nutritionalInfo.protein} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Carbohydrates</p>
+              <p className="font-medium text-white">Carbohydrates</p>
               <Textarea readOnly value={nutritionalInfo.carbohydrates} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Fiber</p>
+              <p className="font-medium text-white">Fiber</p>
               <Textarea readOnly value={nutritionalInfo.fiber} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Calcium</p>
+              <p className="font-medium text-white">Calcium</p>
               <Textarea readOnly value={nutritionalInfo.calcium} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Iron</p>
+              <p className="font-medium text-white">Iron</p>
               <Textarea readOnly value={nutritionalInfo.iron} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin A</p>
+              <p className="font-medium text-white">Vitamin A</p>
               <Textarea readOnly value={nutritionalInfo.vitaminA} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin B</p>
+              <p className="font-medium text-white">Vitamin B</p>
               <Textarea readOnly value={nutritionalInfo.vitaminB} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin C</p>
+              <p className="font-medium text-white">Vitamin C</p>
               <Textarea readOnly value={nutritionalInfo.vitaminC} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Vitamin D</p>
+              <p className="font-medium text-white">Vitamin D</p>
               <Textarea readOnly value={nutritionalInfo.vitaminD} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Potassium</p>
+              <p className="font-medium text-white">Potassium</p>
               <Textarea readOnly value={nutritionalInfo.potassium} />
             </div>
             <div>
-              <p className="font-medium text-yellow-300">Overall Nutritional Information</p>
+              <p className="font-medium text-white">Overall Nutritional Information</p>
               <Textarea readOnly value={nutritionalInfo.overall} />
             </div>
           </div>
         ) : (
-          <p className="text-yellow-300">No nutritional information generated yet.</p>
+          <p className="text-white">No nutritional information generated yet.</p>
         )}
       </div>
 
@@ -411,7 +401,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-between items-center mb-4">
-        <p className="text-yellow-300">
+        <p className="text-white">
           Powered by <span className="font-bold">Firebase</span> | AI features powered by{' '}
           <span className="font-bold">Genkit</span>
         </p>
@@ -429,3 +419,4 @@ export default function Home() {
     </div>
   );
 }
+
