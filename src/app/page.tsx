@@ -176,6 +176,11 @@ export default function Home() {
     setFoodItems(newFoodItems);
   };
 
+  const totalQuantity = foodItems.reduce((sum, item) => {
+    const quantityValue = parseFloat(item.quantity);
+    return isNaN(quantityValue) ? sum : sum + quantityValue;
+  }, 0);
+
   return (
     <div className="container mx-auto p-4">
       <Card className="mb-4">
@@ -280,6 +285,17 @@ export default function Home() {
               </Button>
             </div>
           ))}
+
+          <div className="flex items-center space-x-2 mb-2">
+              <Label>Total Quantity:</Label>
+              <Input
+                type="text"
+                value={totalQuantity.toString()}
+                readOnly
+                className="w-1/2"
+              />
+            </div>
+
           <Button variant="secondary" onClick={handleAddFoodItem}>
             Add Food Item
           </Button>
