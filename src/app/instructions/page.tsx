@@ -2,7 +2,7 @@
 
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
-import {use, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 async function getInstructions(dish: string) {
   // Placeholder instructions data (replace with actual data fetching)
@@ -78,8 +78,14 @@ interface InstructionsPageProps {
 }
 
 export default function InstructionsPage({searchParams}: InstructionsPageProps) {
-  const {dish} = use(Promise.resolve(searchParams));
+  const [dish, setDish] = useState<string | undefined>(undefined);
   const [instructions, setInstructions] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (searchParams) {
+      setDish(searchParams.dish);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const loadInstructions = async () => {
