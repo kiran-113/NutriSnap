@@ -66,6 +66,9 @@ const identifyFoodFlow = ai.defineFlow<
   outputSchema: IdentifyFoodOutputSchema,
 },
 async input => {
+  if (!process.env.GOOGLE_GENAI_API_KEY) {
+      throw new Error('GOOGLE_GENAI_API_KEY is not set. Please set a valid API key.');
+  }
   const {output} = await identifyFoodPrompt(input);
   return output!;
 });
