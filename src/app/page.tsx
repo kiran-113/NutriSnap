@@ -49,7 +49,7 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   // Removed transition classes to avoid background fading.
-  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
+  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-green-400 to-blue-500 shadow-xl');
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   useEffect(() => {
@@ -118,7 +118,16 @@ export default function Home() {
     setLoadingFood(true);
     try {
       const result = await identifyFood({ imageUrl: imageDataUrl, imageType });
-      setFoodItems(result.foodItems.map((foodItem: string) => ({ name: foodItem, quantity: '' })));
+      const identifiedFoodItems = result.foodItems.map((foodItem: string) => ({ name: foodItem, quantity: '' }));
+      setFoodItems(identifiedFoodItems);
+
+      // Determine theme based on identified food items
+      let newThemeColor = 'bg-gradient-to-r from-green-400 to-blue-500 shadow-xl'; // Default
+      if (identifiedFoodItems.some(item => isNonVeg(item.name))) {
+        newThemeColor = 'bg-gradient-to-r from-red-400 to-orange-500 shadow-xl';
+      }
+      setThemeColor(newThemeColor);
+
       toast({
         title: 'Food Identified!',
         description: 'Food items identified successfully.',
@@ -195,11 +204,14 @@ export default function Home() {
   };
 
   return (
-    <div className={cn("container mx-auto p-4", themeColor)}>
+    <div className={cn("container mx-auto p-4 text-white", themeColor, "transition-all duration-300")}>
       <div className="flex justify-between items-center mb-4">
-        <CardTitle className="text-4xl font-extrabold text-white drop-shadow-lg">NutriSnap</CardTitle>
+        <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
         <Link href="/theme">
-          <Button variant="outline" className="bg-white text-black hover:bg-gray-200 border border-white">
+          <Button
+            variant="outline"
+            className="bg-white text-black hover:bg-gray-200 border border-white"
+          >
             More
           </Button>
         </Link>
@@ -242,7 +254,7 @@ export default function Home() {
             variant="secondary"
             onClick={enableCamera}
             disabled={hasCameraPermission}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white"
+            className="bg-blue-500 hover:bg-blue-600 text-white"
           >
             <Camera className="mr-2 h-4 w-4" />
             Enable Camera
