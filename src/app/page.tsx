@@ -12,6 +12,7 @@ import {cn} from '@/lib/utils';
 import {useToast} from '@/hooks/use-toast';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Camera, Upload } from "lucide-react";
+import {Switch} from "@/components/ui/switch";
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
@@ -35,6 +36,7 @@ export default function Home() {
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
+  const [vegMode, setVegMode] = useState(true);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -182,10 +184,21 @@ export default function Home() {
   }, 0);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className={cn("container mx-auto p-4", vegMode ? "bg-green-100" : "bg-orange-100")}>
+           <div className="flex justify-between items-center mb-4">
+        <CardTitle>NutriSnap</CardTitle>
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="vegMode">Veg Mode</Label>
+          <Switch
+            id="vegMode"
+            checked={vegMode}
+            onCheckedChange={(checked) => setVegMode(checked)}
+          />
+        </div>
+      </div>
       <Card className="mb-4">
         <CardHeader>
-          <CardTitle>NutriSnap</CardTitle>
+
           <CardDescription>Identify food items from an image and get nutritional information.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -388,3 +401,4 @@ export default function Home() {
     </div>
   );
 }
+
