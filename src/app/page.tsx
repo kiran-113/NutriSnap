@@ -18,7 +18,17 @@ export default function Home() {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<string[]>([]);
-  const [nutritionalInfo, setNutritionalInfo] = useState<string>('');
+  const [nutritionalInfo, setNutritionalInfo] = useState<{
+    calories: string;
+    protein: string;
+    carbohydrates: string;
+    fiber: string;
+    calcium: string;
+    iron: string;
+    vitaminB: string;
+    vitaminC: string;
+    overall: string;
+  } | null>(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
@@ -130,20 +140,7 @@ export default function Home() {
         throw new Error('Failed to generate nutritional summary or summary is missing');
       }
 
-      // Format the nutritional information into a human-readable string
-      const formattedNutrition = `
-Calories: ${result.summary.calories}
-Protein: ${result.summary.protein}
-Carbohydrates: ${result.summary.carbohydrates}
-Fiber: ${result.summary.fiber}
-Calcium: ${result.summary.calcium}
-Iron: ${result.summary.iron}
-Vitamin B: ${result.summary.vitaminB}
-Vitamin C: ${result.summary.vitaminC}
-Overall: ${result.summary.overall}
-      `;
-
-      setNutritionalInfo(formattedNutrition);
+      setNutritionalInfo(result.summary);
       toast({
         title: 'Nutritional Info Generated!',
         description: 'Nutritional information generated successfully.',
@@ -286,8 +283,54 @@ Overall: ${result.summary.overall}
           <Button disabled={!foodItems.length || loadingNutrition} onClick={handleGenerateNutrition} className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4">
             {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
           </Button>
+
           {nutritionalInfo ? (
-            <Textarea readOnly value={nutritionalInfo}  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Calories (Approximate)</h3>
+                <p>{nutritionalInfo.calories}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Protein</h3>
+                <p>{nutritionalInfo.protein}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Carbohydrates</h3>
+                <p>{nutritionalInfo.carbohydrates}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Fiber</h3>
+                <p>{nutritionalInfo.fiber}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Calcium</h3>
+                <p>{nutritionalInfo.calcium}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Iron</h3>
+                <p>{nutritionalInfo.iron}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Vitamin B</h3>
+                <p>{nutritionalInfo.vitaminB}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Vitamin C</h3>
+                <p>{nutritionalInfo.vitaminC}</p>
+              </div>
+
+               <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Overall</h3>
+                <p>{nutritionalInfo.overall}</p>
+              </div>
+            </div>
           ) : (
             <p>No nutritional information generated yet.</p>
           )}
@@ -302,4 +345,3 @@ Overall: ${result.summary.overall}
     </div>
   );
 }
-
