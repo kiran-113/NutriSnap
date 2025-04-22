@@ -22,7 +22,7 @@ body {
     --secondary-foreground: 240 20% 10%; /* Dark Gray */
     --muted: 140 10% 90%; /* Very Light Green */
     --muted-foreground: 0 0% 40%;
-    --accent: 40 90% 55%; /* Bright Orange */
+    --accent: 220 70% 50%; /* Blue */
     --accent-foreground: 0 0% 9%;
     --destructive: 0 74.2% 55.2%;
     --destructive-foreground: 0 0% 98%;
@@ -58,7 +58,7 @@ body {
     --secondary-foreground: 140 40% 94%; /* Light Green */
     --muted: 240 15% 18%;
     --muted-foreground: 140 20% 58%; /* Medium Green */
-    --accent: 240 15% 18%;
+    --accent: 220 70% 50%;
     --accent-foreground: 140 40% 94%; /* Light Green */
     --destructive: 0 52.8% 25.6%;
     --destructive-foreground: 140 40% 94%; /* Light Green */
