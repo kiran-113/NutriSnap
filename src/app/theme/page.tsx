@@ -102,7 +102,9 @@ export default function ThemePage() {
         
       
       
-        Select Nutrient Theme
+        
+          Select Nutrient Theme
+        
         
           
             
@@ -229,7 +231,7 @@ export default function ThemePage() {
             
           )}
         </>
-      )}
+      
     
   );
 }
