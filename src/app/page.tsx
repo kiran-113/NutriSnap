@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, useRef, useEffect} from 'react';
-import {Button} from '@/components/ui/button';
+import {Button, buttonVariants} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
@@ -11,10 +11,10 @@ import {Textarea} from '@/components/ui/textarea';
 import {cn} from '@/lib/utils';
 import {useToast} from '@/hooks/use-toast';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {Camera, Upload} from 'lucide-react';
+import {Camera, CheckCircle, Upload} from 'lucide-react';
 import {estimateFoodWeight} from '@/ai/flows/estimate-food-weight';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 const Toaster = dynamic(() => import('@/components/ui/toaster').then(mod => mod.Toaster), {
@@ -33,10 +33,10 @@ const isNonVeg = (foodName: string) => {
 
 export default function Home() {
   const [image, setImageUrl] = useState<File | null>(null);
-  const [imageDataUrl, setImageDataUrl] = useState<string>('');
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<{ name: string; quantity: string; }[]>([{name: '', quantity: ''}]);
-  const [nutritionalInfo, setNutritionalInfo] = useState(null);
+  const [nutritionalInfo, setNutritionalInfo] = useState<any>(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
@@ -44,13 +44,20 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [themeColor, setThemeColor] = useState('bg-green-100 shadow-green-500/50');
 
   useEffect(() => {
-    // Update theme color based on food items
-    const hasNonVegItem = foodItems.some(item => isNonVeg(item.name));
-    setThemeColor(hasNonVegItem ? 'bg-red-100 shadow-red-500/50' : 'bg-green-100 shadow-green-500/50');
-  }, [foodItems]);
+    // Function to load theme from local storage
+    const loadTheme = () => {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        setThemeColor(storedTheme);
+      }
+    };
+
+    loadTheme();
+  }, []);
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -61,16 +68,14 @@ export default function Home() {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
-      } catch (error: any) {
+      } catch (error) {
         console.error('Error accessing camera:', error);
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
           title: 'Camera Access Denied',
-          description:
-            'Please enable camera permissions in your browser settings to use this app.',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
         });
-        return;
       }
     };
 
@@ -79,49 +84,30 @@ export default function Home() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const file = e.target.files[0];
+    const file:File | null = e.target.files[0];
     setImageDataUrl(URL.createObjectURL(file));
     setImageType(file.type);
     const reader = new FileReader();
-    reader.onloadend = () => {
+      reader.onloadend = () => {
       setImageDataUrl(reader.result as string);
     };
   };
 
-  const handleCaptureImage = async () => {
-    if (!hasCameraPermission) {
-      // Request camera permission
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
-        setHasCameraPermission(true);
-        videoRef.current!.srcObject = stream;
-      } catch (error: any) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this app.',
-        });
-        return;
-      }
-    }
-
-    if (videoRef.current) {
-      const canvas = document.createElement('canvas');
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg');
-      setImageDataUrl(dataUrl);
-      setImageType('image/jpeg');
-      videoRef.current.srcObject = null;
-    }
-  };
+  const handleCapture = async () => {
+       const canvas = document.createElement('canvas');
+       canvas.width = videoRef.current.videoWidth;
+       canvas.height = videoRef.current.videoHeight;
+       const ctx = canvas.getContext('2d');
+       ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+       const dataUrl = canvas.toDataURL('image/png');
+       setImageDataUrl(dataUrl);
+       setImageType('image/jpeg');
+       videoRef.current.srcObject = null;
+   };
 
   const handleIdentifyFood = async () => {
     if (!imageDataUrl) return;
+
     setLoadingFood(true);
     try {
       const result = await identifyFood({imageUrl: imageDataUrl, imageType});
@@ -135,7 +121,7 @@ export default function Home() {
       toast({
         variant: 'destructive',
         title: 'Error Identifying Food',
-        description: error.message,
+        description: error.message
       });
     } finally {
       setLoadingFood(false);
@@ -144,20 +130,20 @@ export default function Home() {
 
   const handleGenerateNutrition = async () => {
     if (!foodItems.length) return;
+
     setLoadingNutrition(true);
     try {
       const result = await generateNutritionalInformation({foodItems});
       if (!result.summary) {
         throw new Error('Failed to generate nutritional summary or summary is missing');
       }
-
       setNutritionalInfo(result.summary);
       toast({
         title: 'Nutritional Info Generated!',
         description: 'Nutritional information generated successfully.',
       });
     } catch (error: any) {
-      console.error('Error generating nutrition info:', error);
+      console.error('Error generating nutritional information:', error);
       toast({
         variant: 'destructive',
         title: 'Error Generating Nutrition Info',
@@ -168,7 +154,7 @@ export default function Home() {
     }
   };
 
-  const handleFoodItemChange = async (index: number, field: 'name' | 'quantity', value: string) => {
+  const handleQuantityChange = async (index: number, field: string, value: string) => {
     const newFoodItems = [...foodItems];
     newFoodItems[index][field] = value;
     setFoodItems(newFoodItems);
@@ -179,21 +165,22 @@ export default function Home() {
         const result = await estimateFoodWeight({foodItemName: value});
         newFoodItems[index]['quantity'] = result.estimatedWeight;
         setFoodItems(newFoodItems);
-      } catch (error: any) {
+      } catch (error) {
         console.error('Error estimating weight:', error);
-         toast({
-           variant: 'destructive',
-           title: 'Error Estimating Weight',
-           description: error.message,
-         });
+        toast({
+          variant: 'destructive',
+          title: 'Weight Estimation Failed',
+          description: 'Failed to estimate weight. Please enter quantity manually.',
+        });
       } finally {
         setWeightEstimationLoading(false);
       }
     }
-  };
+   };
 
   const handleAddFoodItem = () => {
-    setFoodItems([...foodItems, {name: '', quantity: ''}]);
+
+    setFoodItems([...foodItems, { name: '', quantity: '' }]);
   };
 
   const handleRemoveFoodItem = (index: number) => {
@@ -202,233 +189,214 @@ export default function Home() {
     setFoodItems(newFoodItems);
   };
 
-  const totalQuantity = foodItems.reduce((sum, item) => {
-    const quantityValue = parseFloat(item.quantity);
-    return isNaN(quantityValue) ? sum : sum + quantityValue;
-  }, 0);
-
   return (
     <div className={cn("container mx-auto p-4 transition-colors duration-500", themeColor)}>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 ">
         <CardTitle>NutriSnap</CardTitle>
         <Link href="/theme">
           <Button variant="outline">More</Button>
         </Link>
       </div>
-      <Card className="mb-4">
-        <CardHeader>
-          <CardDescription>Identify food items from an image and get nutritional information.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4">
-            <div className="flex items-center space-x-2">
-              <Button asChild variant="secondary">
-                <Label htmlFor="image" className="cursor-pointer flex items-center">
+       Effortlessly track your nutrition!
+      
+        
+          
+            {imageDataUrl ? (
+              <img src={imageDataUrl} alt="Uploaded Food" className="w-full aspect-video rounded-md" />
+            ) : (
+              
+                {!hasCameraPermission ? (
+                  
+                    Camera Access Required
+                    Please allow camera access to use this feature.
+                  
+                ) : (
+                  <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+                )}
+              
+            )}
+             <Button
+                variant="secondary"
+                onClick={handleCapture}
+                disabled={!hasCameraPermission}
+              >
+                <Camera className="mr-2 h-4 w-4" />
+                Capture Image
+              </Button>
+               <Button
+                  variant="secondary"
+                >
+                   <Label htmlFor="image">
                   <Upload className="mr-2 h-4 w-4" />
                   Choose Image
                 </Label>
               </Button>
               <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
-
               <Button
                 variant="secondary"
-                onClick={handleCaptureImage}
-                disabled={!hasCameraPermission || !videoRef.current?.videoWidth}
+                onClick={handleIdentifyFood}
+                disabled={!imageDataUrl || loadingFood}
               >
-                <Camera className="mr-2 h-4 w-4" />
-                Capture Image
+                {loadingFood ? 'Identifying...' : 'Identify Food'}
               </Button>
-            </div>
-
-            {hasCameraPermission && (
-              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
-            )}
-
-            {!hasCameraPermission && (
-              <Alert variant="destructive">
-                <AlertTitle>Camera Access Required</AlertTitle>
-                <AlertDescription>Please allow camera access to use this feature.</AlertDescription>
-              </Alert>
-            )}
-
-            {imageDataUrl && (
-              <div className="flex justify-center">
-                <img src={imageDataUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
-              </div>
-            )}
-            <Button
-              disabled={!imageDataUrl || loadingFood}
-              onClick={handleIdentifyFood}
-              className="bg-accent text-accent-foreground hover:bg-accent/80"
-            >
-              {loadingFood ? 'Identifying...' : 'Identify Food'}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>Food Items</CardTitle>
-          <CardDescription>Manually adjust the identified food items and provide quantity.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {foodItems.map((item, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
-              <Input
-                type="text"
-                value={item.name}
-                onChange={e => handleFoodItemChange(index, 'name', e.target.value)}
-                placeholder="Food Item"
-                className="w-1/2"
-              />
-              <Input
-                type="text"
-                value={item.quantity}
-                onChange={e => handleFoodItemChange(index, 'quantity', e.target.value)}
-                placeholder="Quantity (e.g., 1 medium, 100g)"
-                required
-                className="w-1/2"
-              />
-              <Button variant="destructive" size="icon" onClick={() => handleRemoveFoodItem(index)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-trash"
+            
+          
+        
+      
+      
+        
+          Food Items
+        
+        
+          
+            {foodItems.map((item, index) => (
+              
+                
+                  <Label htmlFor={`name-${index}`}>Item {index + 1}</Label>
+                  <Input
+                    type="text"
+                    id={`name-${index}`}
+                    placeholder="Food Item Name"
+                    value={item.name}
+                    onChange={(e) => handleQuantityChange(index, 'name', e.target.value)}
+                  />
+                
+                
+                  <Label htmlFor={`quantity-${index}`}>Quantity</Label>
+                  <Input
+                    type="text"
+                    id={`quantity-${index}`}
+                    placeholder="Quantity (e.g., 100g, 1 medium)"
+                    value={item.quantity}
+                    onChange={(e) => handleQuantityChange(index, 'quantity', e.target.value)}
+                  />
+                
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleRemoveFoodItem(index)}
                 >
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
-              </Button>
-            </div>
-          ))}
-
-          <div className="flex items-center space-x-2 mb-2">
-            <Label>Total Quantity:</Label>
-            <Input type="text" value={totalQuantity.toString()} readOnly className="w-1/2" />
-          </div>
-
-          <Button variant="secondary" onClick={handleAddFoodItem}>
-            Add Food Item
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Nutritional Information</CardTitle>
-          <CardDescription>Estimated calories, vitamins, and minerals.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button
-            disabled={!foodItems.every(item => item.name && item.quantity) || loadingNutrition}
-            onClick={handleGenerateNutrition}
-            className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4"
-          >
-            {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
-          </Button>
-
+                  <Trash className="h-4 w-4" />
+                </Button>
+              
+            ))}
+            <Button variant="secondary" onClick={handleAddFoodItem}>Add Food Item</Button>
+          
+        
+      
+      
+        
+          Nutritional Information
+        
+        
           {nutritionalInfo ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Calories (Approximate)</h3>
-                <p>{nutritionalInfo.calories}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Protein</h3>
-                <p>{nutritionalInfo.protein}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Carbohydrates</h3>
-                <p>{nutritionalInfo.carbohydrates}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Fiber</h3>
-                <p>{nutritionalInfo.fiber}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Calcium</h3>
-                <p>{nutritionalInfo.calcium}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Iron</h3>
-                <p>{nutritionalInfo.iron}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Vitamin B</h3>
-                <p>{nutritionalInfo.vitaminB}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Vitamin C</h3>
-                <p>{nutritionalInfo.vitaminC}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Vitamin A</h3>
-                <p>{nutritionalInfo.vitaminA}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Vitamin D</h3>
-                <p>{nutritionalInfo.vitaminD}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Potassium</h3>
-                <p>{nutritionalInfo.potassium}</p>
-              </div>
-
-              <div className="p-4 rounded-md shadow-md bg-blue-100">
-                <h3 className="font-semibold">Overall</h3>
-                <p>{nutritionalInfo.overall}</p>
-              </div>
-            </div>
+            
+              
+                
+                  Calories
+                
+                <Textarea readOnly value={nutritionalInfo.calories} />
+              
+              
+                 
+                   
+                     Protein
+                   
+                   <Textarea readOnly value={nutritionalInfo.protein} />
+                 
+                 
+                   
+                     Carbohydrates
+                   
+                   <Textarea readOnly value={nutritionalInfo.carbohydrates} />
+                 
+                 
+                   
+                     Fiber
+                   
+                   <Textarea readOnly value={nutritionalInfo.fiber} />
+                 
+                 
+                   
+                     Calcium
+                   
+                   <Textarea readOnly value={nutritionalInfo.calcium} />
+                 
+                 
+                   
+                     Iron
+                   
+                   <Textarea readOnly value={nutritionalInfo.iron} />
+                 
+                 
+                   
+                     Vitamin A
+                   
+                   <Textarea readOnly value={nutritionalInfo.vitaminA} />
+                 
+                 
+                   
+                     Vitamin B
+                   
+                   <Textarea readOnly value={nutritionalInfo.vitaminB} />
+                 
+                 
+                   
+                     Vitamin C
+                   
+                   <Textarea readOnly value={nutritionalInfo.vitaminC} />
+                 
+                  
+                    
+                      Vitamin D
+                    
+                    <Textarea readOnly value={nutritionalInfo.vitaminD} />
+                  
+                  
+                    
+                      Potassium
+                    
+                    <Textarea readOnly value={nutritionalInfo.potassium} />
+                  
+                
+              
+              
+                Overall Nutritional Information
+                <Textarea readOnly value={nutritionalInfo.overall} />
+              
+            
           ) : (
-            <p>No nutritional information generated yet. Please provide the quantity of each food item.</p>
+            
           )}
-        </CardContent>
-      </Card>
-      <footer className="mt-8 text-center text-muted-foreground">
-        <p>
-          Powered by{' '}
-          <a
-            href="https://firebase.google.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            Firebase
-          </a>{' '}
-          and{' '}
-          <a
-            href="https://genkit.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            Genkit
-          </a>
-        </p>
-      </footer>
-       <Link href="/instructions">
+        
+        <Button
+          variant="secondary"
+          onClick={handleGenerateNutrition}
+          disabled={foodItems.length === 0 || loadingNutrition}
+        >
+          {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
+        </Button>
+      
+      
+         
+           Powered by{' '}
+           
+             Firebase
+           
+         
+         
+           AI features powered by{' '}
+           
+             Genkit
+           
+         
+       
+
+        <Link href="/theme">
         <Button variant="outline">Switch to Instructions Mode</Button>
-      </Link>
-      <Toaster/>
-    </div>
-  );
+        </Link>
+       
+       <Toaster />
+    
+   );
 }
