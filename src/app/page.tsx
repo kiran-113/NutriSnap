@@ -1,4 +1,3 @@
-
 'use client';
 
 import {useState, useRef, useEffect} from 'react';
@@ -26,40 +25,40 @@ export default function Home() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
-  useEffect(() => {
-    const getCameraPermission = async () => {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('getUserMedia is not supported in this browser');
-        toast({
-          variant: 'destructive',
-          title: 'Camera Error',
-          description: 'Camera access is not supported in your browser.',
-        });
-        setHasCameraPermission(false);
-        return;
+
+  const enableCamera = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error('getUserMedia is not supported in this browser');
+      toast({
+        variant: 'destructive',
+        title: 'Camera Error',
+        description: 'Camera access is not supported in your browser.',
+      });
+      setHasCameraPermission(false);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({video: true});
+      setHasCameraPermission(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
       }
+      setIsCameraActive(true); // Camera is now active
+    } catch (error: any) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings to use this app.',
+      });
+    }
+  };
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
-        setHasCameraPermission(true);
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (error: any) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this app.',
-        });
-      }
-    };
-
-    getCameraPermission();
-  }, []);
 
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +73,10 @@ export default function Home() {
     reader.readAsDataURL(file);
   };
 
-  const handleCaptureImage = () => {
+  const handleCaptureImage = async () => {
+    if (!hasCameraPermission) {
+      await enableCamera();
+    }
     if (!videoRef.current) return;
 
     const canvas = document.createElement('canvas');
@@ -183,14 +185,17 @@ export default function Home() {
               <Button
                   variant="secondary"
                   onClick={handleCaptureImage}
-                  disabled={!hasCameraPermission || !videoRef.current?.videoWidth}
+                  disabled={!hasCameraPermission  || !videoRef.current?.videoWidth}
               >
                 <Camera className="mr-2 h-4 w-4" />
                 Capture Image
               </Button>
             </div>
 
-            <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+            {isCameraActive && (
+                <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+            )}
+
 
             { !(hasCameraPermission) && (
                 <Alert variant="destructive">
