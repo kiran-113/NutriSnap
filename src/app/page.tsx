@@ -55,10 +55,10 @@ export default function Home() {
     const hasNonVeg = foodItems.some(item => isNonVegItem(item.name));
 
     if (hasNonVeg) {
-      setPageColor("bg-red-200"); // Set to red if non-veg item is present
+      setPageColor("bg-red-300"); // Set to red if non-veg item is present
     } else {
       // Set to green or orange based on vegMode
-      setPageColor(vegMode ? "bg-green-200" : "bg-orange-200");
+      setPageColor(vegMode ? "bg-green-300" : "bg-orange-300");
     }
   }, [foodItems, vegMode]);
 
@@ -350,62 +350,62 @@ export default function Home() {
 
           {nutritionalInfo ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Calories (Approximate)</h3>
                 <p>{nutritionalInfo.calories}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Protein</h3>
                 <p>{nutritionalInfo.protein}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Carbohydrates</h3>
                 <p>{nutritionalInfo.carbohydrates}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Fiber</h3>
                 <p>{nutritionalInfo.fiber}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Calcium</h3>
                 <p>{nutritionalInfo.calcium}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Iron</h3>
                 <p>{nutritionalInfo.iron}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Vitamin B</h3>
                 <p>{nutritionalInfo.vitaminB}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Vitamin C</h3>
                 <p>{nutritionalInfo.vitaminC}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Vitamin A</h3>
                 <p>{nutritionalInfo.vitaminA}</p>
               </div>
 
-              <div className="p-4 rounded-md shadow-md">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Vitamin D</h3>
                 <p>{nutritionalInfo.vitaminD}</p>
               </div>
 
-               <div className="p-4 rounded-md shadow-md">
+               <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Potassium</h3>
                 <p>{nutritionalInfo.potassium}</p>
               </div>
 
-               <div className="p-4 rounded-md shadow-md">
+               <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Overall</h3>
                 <p>{nutritionalInfo.overall}</p>
               </div>
