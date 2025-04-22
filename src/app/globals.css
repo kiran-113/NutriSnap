@@ -80,42 +80,34 @@ body {
     --sidebar-ring: 140 50% 50%; /* Medium Green Ring */
   }
 
-  /* New Dark Blue/Black Gradient Theme */
-  .blue-black-theme {
-    --background: 220 30% 10%; /* Dark Blue */
-    --foreground: 50 20% 90%; /* Light Blue */
-    --card: 220 20% 15%;
-    --card-foreground: 50 20% 90%;
-    --popover: 220 20% 15%;
-    --popover-foreground: 50 20% 90%;
-    --primary: 50 50% 50%; /* Medium Blue */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 10% 25%;
-    --secondary-foreground: 50 20% 90%;
-    --muted: 220 10% 20%;
-    --muted-foreground: 50 10% 60%;
-    --accent: 50 80% 40%; /* Cyan */
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 10% 30%;
-    --input: 220 10% 25%;
-    --ring: 50 50% 50%;
-    --chart-1: 10 80% 60%; /* Darker Blue */
-    --chart-2: 300 60% 55%; /* Pink */
-    --chart-3: 60 70% 55%; /* Yellow */
-    --chart-4: 180 60% 50%; /* Cyan */
-    --chart-5: 40 80% 55%; /* Orange */
-    --sidebar-background: 220 20% 18%;
-    --sidebar-foreground: 50 20% 80%;
-    --sidebar-primary: 50 50% 40%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 220 10% 30%;
-    --sidebar-accent-foreground: 50 20% 70%;
-    --sidebar-border: 220 10% 40%;
-    --sidebar-ring: 50 50% 40%;
+  /* Green Theme */
+  .green-theme {
+    --background: 100 80% 70%;
+    --foreground: 0 0% 10%;
+    --primary: 140 60% 50%;
+    --secondary: 140 30% 80%;
+    --accent: 60 100% 60%;
+    --shadow-color: rgba(100, 100, 100, 0.3); /* Example shadow color */
+  }
 
-    background-image: linear-gradient(to bottom, #000046, #1cb5e0); /* Black to Blue Gradient */
+  /* Orange Theme */
+  .orange-theme {
+    --background: 40 80% 70%;
+    --foreground: 0 0% 10%;
+    --primary: 40 60% 50%;
+    --secondary: 40 30% 80%;
+    --accent: 40 100% 60%;
+    --shadow-color: rgba(200, 100, 0, 0.3); /* Example shadow color */
+  }
+
+  /* Red Theme */
+  .red-theme {
+    --background: 0 80% 70%;
+    --foreground: 0 0% 10%;
+    --primary: 0 60% 50%;
+    --secondary: 0 30% 80%;
+    --accent: 0 100% 60%;
+    --shadow-color: rgba(200, 0, 0, 0.3); /* Example shadow color */
   }
 
   * {

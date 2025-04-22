@@ -21,7 +21,7 @@ export default function Home() {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([]);
-  const [nutritionalInfo, setNutritionalInfo]: any = useState<{
+  const [nutritionalInfo, setNutritionalInfo] = useState<{
     calories: string;
     protein: string;
     carbohydrates: string;
@@ -424,3 +424,4 @@ export default function Home() {
     </div>
   );
 }
+
