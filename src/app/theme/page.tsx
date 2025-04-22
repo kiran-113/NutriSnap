@@ -65,7 +65,7 @@ export default function Theme() {
 
   return (
 
-        Diet & Nutri Directive
+        Diet &amp; Nutri Directive
       
       
         
@@ -142,4 +142,5 @@ export default function Theme() {
    
   );
 }
+
 
