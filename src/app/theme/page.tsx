@@ -126,6 +126,9 @@ export default function ThemePage() {
                 <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
                 <Label htmlFor="all">All</Label>
               </div>
+              <Button variant="secondary" onClick={() => console.log('Apply Food Theme')}>
+                Apply Food Theme
+              </Button>
             </div>
           </div>
         </CardContent>
