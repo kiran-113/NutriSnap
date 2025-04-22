@@ -9,6 +9,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useState, useEffect} from 'react';
 import {cn} from '@/lib/utils';
 import {Checkbox} from '@/components/ui/checkbox';
+import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendations';
 
 export default function ThemePage() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function ThemePage() {
     all: false,
   });
   const [themeColor, setThemeColor] = useState('bg-gray-100');
+  const [foodRecommendations, setFoodRecommendations] = useState<any>(null);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   useEffect(() => {
     // Determine the theme color based on food type selection
@@ -63,6 +66,25 @@ export default function ThemePage() {
         const anySelected = Object.keys(updatedTheme).filter(key => key !== 'all').some(key => updatedTheme[key]);
         return {...updatedTheme, all: anySelected && Object.keys(updatedTheme).filter(key => key !== 'all').every(key => updatedTheme[key])};
       });
+    }
+  };
+
+  const handleGenerateRecommendations = async () => {
+    if (!nutrientTheme || Object.values(foodTheme).every(value => !value)) {
+      alert('Please select a nutrient theme and at least one food theme.');
+      return;
+    }
+
+    setLoadingRecommendations(true);
+    try {
+      const selectedFoodThemes = Object.keys(foodTheme).filter(key => foodTheme[key] === true && key !== 'all');
+      const result = await generateFoodRecommendations({nutrientTheme: nutrientTheme, foodThemes: selectedFoodThemes});
+      setFoodRecommendations(result.recommendedFoods);
+    } catch (error: any) {
+      console.error('Error generating food recommendations:', error);
+      alert(`Error generating food recommendations: ${error.message}`);
+    } finally {
+      setLoadingRecommendations(false);
     }
   };
 
@@ -126,13 +148,27 @@ export default function ThemePage() {
                 <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
                 <Label htmlFor="all">All</Label>
               </div>
-              <Button variant="secondary" onClick={() => console.log('Apply Food Theme')}>
-                Apply Food Theme
+              <Button variant="secondary" onClick={handleGenerateRecommendations} disabled={loadingRecommendations}>
+                {loadingRecommendations ? 'Generating...' : 'Generate Recommendations'}
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+       {foodRecommendations ? (
+        <div>
+          <h3>Recommended Foods:</h3>
+          <ul>
+            {foodRecommendations.map((food, index) => (
+              <li key={index}>
+                <strong>{food.name}</strong>: {food.description}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
+      )}
       <Link href="/" className="flex justify-end">
         <Button variant="outline">Switch to Previous Mode</Button>
       </Link>
