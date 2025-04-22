@@ -28,6 +28,17 @@ export default function Home() {
 
   useEffect(() => {
     const getCameraPermission = async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('getUserMedia is not supported in this browser');
+        toast({
+          variant: 'destructive',
+          title: 'Camera Error',
+          description: 'Camera access is not supported in your browser.',
+        });
+        setHasCameraPermission(false);
+        return;
+      }
+
       try {
         const stream = await navigator.mediaDevices.getUserMedia({video: true});
         setHasCameraPermission(true);
@@ -35,7 +46,7 @@ export default function Home() {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error accessing camera:', error);
         setHasCameraPermission(false);
         toast({
@@ -170,16 +181,13 @@ export default function Home() {
               <Button
                   variant="secondary"
                   onClick={handleCaptureImage}
-                  disabled={!hasCameraPermission}
+                  disabled={!hasCameraPermission || !videoRef.current?.videoWidth}
               >
                 Capture Image
               </Button>
             </div>
 
-            { hasCameraPermission && (
-                <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
-            )
-            }
+            <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
 
             { !(hasCameraPermission) && (
                 <Alert variant="destructive">
@@ -242,7 +250,7 @@ export default function Home() {
             Add Food Item
           </Button>
         </CardContent>
-      </Card>
+       </Card>
 
       <Card>
         <CardHeader>
@@ -269,3 +277,4 @@ export default function Home() {
     </div>
   );
 }
+
