@@ -195,7 +195,7 @@ export default function ThemePage() {
                   <p className="text-sm"><b>Nutrient Amount:</b> {dish.nutrientAmount}</p>
                                       <Button
                       variant="secondary"
-                      onClick={() => router.push('/instructions')}
+                      onClick={() => router.push(`/instructions?dish=${encodeURIComponent(dish.name)}`)}
                     >
                       View Instructions
                     </Button>
@@ -210,4 +210,3 @@ export default function ThemePage() {
     </div>
   );
 }
-
