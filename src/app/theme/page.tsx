@@ -22,7 +22,7 @@ export default function ThemePage() {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
   const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([]);
-  const [nutritionalInfo, setNutritionalInfo,>: any = useState<{
+  const [nutritionalInfo, setNutritionalInfo>: any = useState<{
     calories: string;
     protein: string;
     carbohydrates: string;
@@ -424,3 +424,4 @@ export default function ThemePage() {
     </div>
   );
 }
+
