@@ -164,9 +164,7 @@ export default function ThemePage() {
           <Link href="/" className="flex justify-end">
             <Button variant="outline">Switch to Previous Mode</Button>
           </Link>
-             <Button variant="outline" onClick={navigateToInstructions}>
-        Switch to Instructions Mode
-      </Button>
+             
         </CardContent>
       </Card>
 
@@ -212,3 +210,4 @@ export default function ThemePage() {
     </div>
   );
 }
+
