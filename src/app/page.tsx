@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,7 +34,6 @@ const isNonVeg = (foodName: string) => {
 };
 
 export default function Home() {
-  // Using a vibrant gradient background on the container WITHOUT any transition
   const [image, setImageUrl] = useState<File | null>(null);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageType, setImageType] = useState<string>('');
@@ -48,12 +47,10 @@ export default function Home() {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  // Removed transition classes to avoid background fading.
-  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
+  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-green-400 to-blue-500');
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   useEffect(() => {
-    // load theme from localStorage if it exists
     const loadTheme = () => {
       const storedTheme = localStorage.getItem('theme');
       if (storedTheme) {
@@ -64,11 +61,22 @@ export default function Home() {
     loadTheme();
   }, []);
 
+  useEffect(() => {
+    if (foodItems.some(item => isNonVeg(item.name))) {
+      setThemeColor('bg-gradient-to-r from-red-400 to-red-600 shadow-red-500/50');
+    } else if (foodItems.length > 0) {
+      setThemeColor('bg-gradient-to-r from-green-400 to-blue-500 shadow-green-500/50');
+    } else {
+      setThemeColor('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
+    }
+  }, [foodItems]);
+
   const enableCamera = async () => {
     setIsCameraActive(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasCameraPermission(true);
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -195,228 +203,230 @@ export default function Home() {
   };
 
   return (
-    <div className={cn('container mx-auto p-4', themeColor)}>
-      <div className="flex justify-between items-center mb-4">
-        <CardTitle className="text-4xl font-extrabold text-yellow-300 drop-shadow-lg">NutriSnap</CardTitle>
-        <Link href="/theme">
-          <Button
-            variant="outline"
-            className="bg-white text-black hover:bg-gray-200 border border-white"
-          >
-            More
-          </Button>
-        </Link>
-      </div>
-      <h2 className="mb-4 text-2xl font-semibold text-yellow-300 drop-shadow-md">
-        Effortlessly track your nutrition!
-      </h2>
-
-      <div className="mb-4">
-        {imageDataUrl ? (
-          <img
-            src={imageDataUrl}
-            alt="Uploaded Food"
-            className="w-full aspect-video rounded-md shadow-lg"
-          />
-        ) : (
-          <div className="w-full aspect-video rounded-md bg-gray-100 flex items-center justify-center">
-            {!hasCameraPermission && isCameraActive ? (
-              <Alert variant="destructive">
-                <AlertTitle>Camera Access Required</AlertTitle>
-                <AlertDescription>
-                  Please allow camera access to use this feature.
-                </AlertDescription>
-              </Alert>
-            ) : isCameraActive ? (
-              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+    
+      
+        
+          
+            
+              <Link href="/theme">
+                
+                  More
+                
+              </Link>
+            
+          
+          
+            Effortlessly track your nutrition!
+          
+            {imageDataUrl ? (
+              
+                <img
+                  src={imageDataUrl}
+                  alt="Uploaded Food"
+                  className="w-full aspect-video rounded-md shadow-lg"
+                />
+              
             ) : (
-              <div className="text-center p-4">
-                <p className="font-medium">No image captured or selected</p>
-                <p>Please capture or upload an image to continue.</p>
-              </div>
+              
+                {!hasCameraPermission && isCameraActive ? (
+                  
+                    
+                      Camera Access Required
+                    
+                    
+                      Please allow camera access to use this feature.
+                    
+                  
+                ) : isCameraActive ? (
+                  <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+                ) : (
+                  
+                    
+                      No image captured or selected
+                    
+                    Please capture or upload an image to continue.
+                  
+                )}
+              
             )}
-          </div>
-        )}
-      </div>
+          
+            
+              {!isCameraActive && (
+                
+                  
+                    
+                      
+                      Enable Camera
+                    
+                  
+                
+              )}
+              {isCameraActive && (
+                
+                  
+                    
+                      
+                      Capture Image
+                    
+                  
+                
+              )}
+              
+                
+                  
+                    
+                      Choose Image
+                    
+                  
+                
+              
 
-      <div className="flex space-x-2 mb-4">
-        {!isCameraActive && (
-          <Button
-            variant="secondary"
-            onClick={enableCamera}
-            disabled={hasCameraPermission}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white"
-          >
-            <Camera className="mr-2 h-4 w-4" />
-            Enable Camera
-          </Button>
-        )}
-        {isCameraActive && (
-          <Button
-            variant="secondary"
-            onClick={handleCapture}
-            disabled={!hasCameraPermission}
-            className="bg-green-500 hover:bg-green-600 text-white"
-          >
-            <Camera className="mr-2 h-4 w-4" />
-            Capture Image
-          </Button>
-        )}
-
-        <Button variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
-          <Label htmlFor="image" className="flex items-center cursor-pointer">
-            <Upload className="mr-2 h-4 w-4" />
-            Choose Image
-          </Label>
-        </Button>
-
-        <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
-      </div>
-
-      <div className="mb-4">
-        <Button
-          variant="secondary"
-          onClick={handleIdentifyFood}
-          disabled={loadingFood}
-          className="bg-purple-500 hover:bg-purple-600 text-white"
-        >
-          {loadingFood ? 'Identifying...' : 'Identify Food'}
-        </Button>
-      </div>
-
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Food Items</h3>
-        {foodItems.map((item, index) => (
-          <div
-            key={index}
-            className="mb-4 p-2 border rounded flex flex-col gap-2 bg-white shadow-md"
-          >
-            <div>
-              <Label htmlFor={`name-${index}`}>Item {index + 1}</Label>
-              <Input
-                type="text"
-                id={`name-${index}`}
-                placeholder="Food Item Name"
-                value={item.name}
-                onChange={(e) => handleQuantityChange(index, 'name', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor={`quantity-${index}`}>Quantity</Label>
-              <Input
-                type="text"
-                id={`quantity-${index}`}
-                placeholder="Quantity (e.g., 100g, 1 medium)"
-                value={item.quantity}
-                onChange={(e) => handleQuantityChange(index, 'quantity', e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handleRemoveFoodItem(index)}
-                className="text-red-600 hover:text-red-800 border-red-600"
-              >
-                Trash
-              </Button>
-            </div>
-          </div>
-        ))}
-        <Button
-          variant="secondary"
-          onClick={handleAddFoodItem}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white"
-        >
-          Add Food Item
-        </Button>
-      </div>
-
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-300">Nutritional Information</h3>
-        {nutritionalInfo ? (
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <p className="font-medium text-yellow-300">Calories</p>
-              <Textarea readOnly value={nutritionalInfo.calories} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Protein</p>
-              <Textarea readOnly value={nutritionalInfo.protein} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Carbohydrates</p>
-              <Textarea readOnly value={nutritionalInfo.carbohydrates} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Fiber</p>
-              <Textarea readOnly value={nutritionalInfo.fiber} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Calcium</p>
-              <Textarea readOnly value={nutritionalInfo.calcium} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Iron</p>
-              <Textarea readOnly value={nutritionalInfo.iron} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Vitamin A</p>
-              <Textarea readOnly value={nutritionalInfo.vitaminA} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Vitamin B</p>
-              <Textarea readOnly value={nutritionalInfo.vitaminB} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Vitamin C</p>
-              <Textarea readOnly value={nutritionalInfo.vitaminC} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Vitamin D</p>
-              <Textarea readOnly value={nutritionalInfo.vitaminD} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Potassium</p>
-              <Textarea readOnly value={nutritionalInfo.potassium} />
-            </div>
-            <div>
-              <p className="font-medium text-yellow-300">Overall Nutritional Information</p>
-              <Textarea readOnly value={nutritionalInfo.overall} />
-            </div>
-          </div>
-        ) : (
-          <p className="text-yellow-300">No nutritional information generated yet.</p>
-        )}
-      </div>
-
-      <div className="mb-6">
-        <Button
-          variant="secondary"
-          onClick={handleGenerateNutrition}
-          disabled={foodItems.length === 0 || loadingNutrition}
-          className="bg-red-500 hover:bg-red-600 text-white"
-        >
-          {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
-        </Button>
-      </div>
-
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-yellow-300">
-          Powered by <span className="font-bold">Firebase</span> | AI features powered by{' '}
-          <span className="font-bold">Genkit</span>
-        </p>
-        <Link href="/theme">
-          <Button
-            variant="outline"
-            className="bg-white text-black hover:bg-gray-200 border border-white"
-          >
-            More
-          </Button>
-        </Link>
-      </div>
-
-      <Toaster />
-    </div>
+              <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
+            
+          
+            
+              
+                {loadingFood ? 'Identifying...' : 'Identify Food'}
+              
+            
+          
+            
+              
+                {foodItems.map((item, index) => (
+                  
+                    
+                      
+                        Item {index + 1}
+                        
+                          Food Item Name
+                          
+                        
+                      
+                      
+                        Quantity
+                        
+                          Quantity (e.g., 100g, 1 medium)
+                          
+                        
+                      
+                      
+                        
+                          Trash
+                        
+                      
+                    
+                  
+                ))}
+                
+                  Add Food Item
+                
+              
+            
+          
+            
+              
+                {nutritionalInfo ? (
+                  
+                    
+                      
+                        Calories
+                        
+                          {nutritionalInfo.calories}
+                        
+                      
+                      
+                        Protein
+                        
+                          {nutritionalInfo.protein}
+                        
+                      
+                      
+                        Carbohydrates
+                        
+                          {nutritionalInfo.carbohydrates}
+                        
+                      
+                      
+                        Fiber
+                        
+                          {nutritionalInfo.fiber}
+                        
+                      
+                      
+                        Calcium
+                        
+                          {nutritionalInfo.calcium}
+                        
+                      
+                      
+                        Iron
+                        
+                          {nutritionalInfo.iron}
+                        
+                      
+                      
+                        Vitamin A
+                        
+                          {nutritionalInfo.vitaminA}
+                        
+                      
+                      
+                        Vitamin B
+                        
+                          {nutritionalInfo.vitaminB}
+                        
+                      
+                      
+                        Vitamin C
+                        
+                          {nutritionalInfo.vitaminC}
+                        
+                      
+                      
+                        Vitamin D
+                        
+                          {nutritionalInfo.vitaminD}
+                        
+                      
+                      
+                        Potassium
+                        
+                          {nutritionalInfo.potassium}
+                        
+                      
+                      
+                        Overall Nutritional Information
+                        
+                          {nutritionalInfo.overall}
+                        
+                      
+                    
+                  
+                ) : (
+                  null
+                )}
+              
+            
+          
+            
+              
+                {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
+              
+            
+          
+          
+            
+              Powered by Firebase | AI features powered by Genkit
+            
+            
+              More
+            
+          
+            <Toaster />
+          
+        
+      
+    
   );
 }
+
