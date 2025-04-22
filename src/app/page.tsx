@@ -10,17 +10,16 @@ import {generateNutritionalInformation} from '@/ai/flows/generate-nutritional-in
 import {Textarea} from '@/components/ui/textarea';
 import {cn} from '@/lib/utils';
 import {useToast} from '@/hooks/use-toast';
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {Camera, Upload } from "lucide-react";
-import {Switch} from "@/components/ui/switch";
-import {estimateFoodWeight} from "@/ai/flows/estimate-food-weight";
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {Camera, Upload, Brush} from 'lucide-react';
+import {estimateFoodWeight} from '@/ai/flows/estimate-food-weight';
 
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
-  const [foodItems, setFoodItems] = useState< { name: string; quantity: string }[]>([]);
-  const [nutritionalInfo, setNutritionalInfo] : any = useState<{
+  const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([]);
+  const [nutritionalInfo, setNutritionalInfo]: any = useState<{
     calories: string;
     protein: string;
     carbohydrates: string;
@@ -37,65 +36,55 @@ export default function Home() {
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
-  const [vegMode, setVegMode] = useState(true);
-  const [pageColor, setPageColor] = useState("bg-green-300 shadow-md");
+  const [pageColor, setPageColor] = useState('bg-green-300 shadow-md');
   const [weightEstimationLoading, setWeightEstimationLoading] = useState(false);
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [isBlueBlackTheme, setIsBlueBlackTheme] = useState(false);
 
-  // Function to check if a food item is non-vegetarian
-  const isNonVegItem = (foodItem: string) => {
-    const nonVegKeywords = ['meat', 'chicken', 'fish', 'egg', 'beef', 'pork', 'lamb'];
-    const lowerCaseItem = foodItem.toLowerCase();
-    return nonVegKeywords.some(keyword => lowerCaseItem.includes(keyword));
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    setIsBlueBlackTheme(storedTheme === 'blue-black');
+  }, []);
+
+  useEffect(() => {
+    if (isBlueBlackTheme) {
+      document.documentElement.classList.add('blue-black-theme');
+      localStorage.setItem('theme', 'blue-black');
+    } else {
+      document.documentElement.classList.remove('blue-black-theme');
+      localStorage.setItem('theme', 'default');
+    }
+  }, [isBlueBlackTheme]);
+
+  const toggleTheme = () => {
+    setIsBlueBlackTheme(prev => !prev);
   };
 
   useEffect(() => {
-    // Check if any food item is non-veg
-    const hasNonVeg = foodItems.some(item => isNonVegItem(item.name));
+    const getCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        setHasCameraPermission(true);
 
-    if (hasNonVeg) {
-      setPageColor("bg-red-300 shadow-md"); // Set to red if non-veg item is present
-    } else {
-      // Set to green or orange based on vegMode
-      setPageColor(vegMode ? "bg-green-300 shadow-md" : "bg-orange-300 shadow-md");
-    }
-  }, [foodItems, vegMode]);
-
-  const enableCamera = async () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.error('getUserMedia is not supported in this browser');
-      toast({
-        variant: 'destructive',
-        title: 'Camera Error',
-        description: 'Camera access is not supported in your browser.',
-      });
-      setHasCameraPermission(false);
-      return;
-    }
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
-      setHasCameraPermission(true);
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description:
+            'Please enable camera permissions in your browser settings to use this app.',
+        });
       }
-      setIsCameraActive(true); // Camera is now active
-    } catch (error: any) {
-      console.error('Error accessing camera:', error);
-      setHasCameraPermission(false);
-      toast({
-        variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings to use this app.',
-      });
-    }
-  };
+    };
 
-
+    getCameraPermission();
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -111,36 +100,44 @@ export default function Home() {
 
   const handleCaptureImage = async () => {
     if (!hasCameraPermission) {
-      await enableCamera();
+      // Request camera permission
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        setHasCameraPermission(true);
+        videoRef.current!.srcObject = stream;
+        setIsCameraActive(true); // Set camera as active if permission is granted
+      } catch (error: any) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
+        });
+        return;
+      }
     }
-    if (!videoRef.current) return;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      toast({
-        variant: 'destructive',
-        title: 'Canvas Context Error',
-        description: 'Could not create canvas context.',
-      });
-      return;
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      setImageUrl(dataUrl);
+      setImageType('image/jpeg');
+      setIsCameraActive(false); // Optionally stop camera after capturing
+      videoRef.current.srcObject = null;
     }
-    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-    const dataUrl = canvas.toDataURL('image/jpeg');
-    setImageUrl(dataUrl);
-    setImageType('image/jpeg');
   };
-
 
   const handleIdentifyFood = async () => {
     if (!imageUrl) return;
     setLoadingFood(true);
     try {
       const result = await identifyFood({imageUrl, imageType});
-      setFoodItems(result.foodItems.map(foodItem => ({ name: foodItem, quantity: '' })));
+      setFoodItems(result.foodItems.map(foodItem => ({name: foodItem, quantity: ''})));
       toast({
         title: 'Food Identified!',
         description: 'Food items identified successfully.',
@@ -170,7 +167,7 @@ export default function Home() {
       toast({
         title: 'Nutritional Info Generated!',
         description: 'Nutritional information generated successfully.',
-       });
+      });
     } catch (error: any) {
       console.error('Error generating nutrition info:', error);
       toast({
@@ -191,7 +188,7 @@ export default function Home() {
     if (field === 'name' && value !== '' && newFoodItems[index]['quantity'] === '') {
       setWeightEstimationLoading(true);
       try {
-        const result = await estimateFoodWeight({ foodItemName: value });
+        const result = await estimateFoodWeight({foodItemName: value});
         newFoodItems[index]['quantity'] = result.estimatedWeight;
         setFoodItems(newFoodItems);
       } catch (error: any) {
@@ -208,7 +205,7 @@ export default function Home() {
   };
 
   const handleAddFoodItem = () => {
-    setFoodItems([...foodItems, { name: '', quantity: '' }]);
+    setFoodItems([...foodItems, {name: '', quantity: ''}]);
   };
 
   const handleRemoveFoodItem = (index: number) => {
@@ -222,26 +219,22 @@ export default function Home() {
     return isNaN(quantityValue) ? sum : sum + quantityValue;
   }, 0);
 
-  const handleVegModeChange = (checked: boolean) => {
-    setVegMode(checked);
-  };
-
   return (
-    <div className={cn("container mx-auto p-4 transition-colors duration-500", pageColor)}>
+    <div
+      className={cn(
+        'container mx-auto p-4 transition-colors duration-500',
+        isBlueBlackTheme ? 'blue-black-theme' : pageColor
+      )}
+    >
       <div className="flex justify-between items-center mb-4">
         <CardTitle>NutriSnap</CardTitle>
-        <div className="flex items-center space-x-2">
-          <Label htmlFor="vegMode">Veg Mode</Label>
-          <Switch
-            id="vegMode"
-            checked={vegMode}
-            onCheckedChange={handleVegModeChange}
-          />
-        </div>
+        <Button onClick={toggleTheme} variant="outline">
+          <Brush className="mr-2 h-4 w-4" />
+          Change Theme
+        </Button>
       </div>
       <Card className="mb-4">
         <CardHeader>
-
           <CardDescription>Identify food items from an image and get nutritional information.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -253,17 +246,12 @@ export default function Home() {
                   Choose Image
                 </Label>
               </Button>
-              <Input
-                id="image"
-                type="file"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
+              <Input id="image" type="file" className="hidden" onChange={handleImageUpload} />
 
               <Button
-                  variant="secondary"
-                  onClick={handleCaptureImage}
-                  disabled={!hasCameraPermission  || !videoRef.current?.videoWidth}
+                variant="secondary"
+                onClick={handleCaptureImage}
+                disabled={!hasCameraPermission || !videoRef.current?.videoWidth}
               >
                 <Camera className="mr-2 h-4 w-4" />
                 Capture Image
@@ -271,27 +259,26 @@ export default function Home() {
             </div>
 
             {isCameraActive && (
-                <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
             )}
 
-
-            { !(hasCameraPermission) && (
-                <Alert variant="destructive">
-                  <AlertTitle>Camera Access Required</AlertTitle>
-                  <AlertDescription>
-                    Please allow camera access to use this feature.
-                  </AlertDescription>
-                </Alert>
-            )
-            }
-
+            {!hasCameraPermission && (
+              <Alert variant="destructive">
+                <AlertTitle>Camera Access Required</AlertTitle>
+                <AlertDescription>Please allow camera access to use this feature.</AlertDescription>
+              </Alert>
+            )}
 
             {imageUrl && (
               <div className="flex justify-center">
                 <img src={imageUrl} alt="Uploaded Food" className="max-h-48 rounded-md shadow-md" />
               </div>
             )}
-            <Button disabled={!imageUrl || loadingFood} onClick={handleIdentifyFood} className="bg-accent text-accent-foreground hover:bg-accent/80">
+            <Button
+              disabled={!imageUrl || loadingFood}
+              onClick={handleIdentifyFood}
+              className="bg-accent text-accent-foreground hover:bg-accent/80"
+            >
               {loadingFood ? 'Identifying...' : 'Identify Food'}
             </Button>
           </div>
@@ -309,14 +296,14 @@ export default function Home() {
               <Input
                 type="text"
                 value={item.name}
-                onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
+                onChange={e => handleFoodItemChange(index, 'name', e.target.value)}
                 placeholder="Food Item"
                 className="w-1/2"
               />
               <Input
                 type="text"
                 value={item.quantity}
-                onChange={(e) => handleFoodItemChange(index, 'quantity', e.target.value)}
+                onChange={e => handleFoodItemChange(index, 'quantity', e.target.value)}
                 placeholder="Quantity (e.g., 1 medium, 100g)"
                 required
                 className="w-1/2"
@@ -343,28 +330,27 @@ export default function Home() {
           ))}
 
           <div className="flex items-center space-x-2 mb-2">
-              <Label>Total Quantity:</Label>
-              <Input
-                type="text"
-                value={totalQuantity.toString()}
-                readOnly
-                className="w-1/2"
-              />
-            </div>
+            <Label>Total Quantity:</Label>
+            <Input type="text" value={totalQuantity.toString()} readOnly className="w-1/2" />
+          </div>
 
           <Button variant="secondary" onClick={handleAddFoodItem}>
             Add Food Item
           </Button>
         </CardContent>
-       </Card>
+      </Card>
 
       <Card>
         <CardHeader>
           <CardTitle>Nutritional Information</CardTitle>
           <CardDescription>Estimated calories, vitamins, and minerals.</CardDescription>
         </CardHeader>
-         <CardContent>
-          <Button disabled={!foodItems.every(item => item.name && item.quantity) || loadingNutrition} onClick={handleGenerateNutrition} className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4">
+        <CardContent>
+          <Button
+            disabled={!foodItems.every(item => item.name && item.quantity) || loadingNutrition}
+            onClick={handleGenerateNutrition}
+            className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4"
+          >
             {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
           </Button>
 
@@ -420,12 +406,12 @@ export default function Home() {
                 <p>{nutritionalInfo.vitaminD}</p>
               </div>
 
-               <div className="p-4 rounded-md shadow-md bg-blue-100">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Potassium</h3>
                 <p>{nutritionalInfo.potassium}</p>
               </div>
 
-               <div className="p-4 rounded-md shadow-md bg-blue-100">
+              <div className="p-4 rounded-md shadow-md bg-blue-100">
                 <h3 className="font-semibold">Overall</h3>
                 <p>{nutritionalInfo.overall}</p>
               </div>
@@ -437,11 +423,27 @@ export default function Home() {
       </Card>
       <footer className="mt-8 text-center text-muted-foreground">
         <p>
-          Powered by <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="underline">Firebase</a> and <a href="https://genkit.dev/" target="_blank" rel="noopener noreferrer" className="underline">Genkit</a>
+          Powered by{' '}
+          <a
+            href="https://firebase.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Firebase
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://genkit.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Genkit
+          </a>
         </p>
       </footer>
       ;
     </div>
   );
 }
-
