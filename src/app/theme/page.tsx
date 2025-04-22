@@ -64,13 +64,16 @@ export default function Theme() {
 	});
 
   return (
-
-        Diet &amp; Nutri Directive
-      
+    
       
         
+          
+            <i><b>Diet & Nutri Directive</b></i>
+          
+        
+        
           Select Nutrient Theme
-          <RadioGroup defaultValue="protein" className="grid gap-2">
+          
             
               
                 
@@ -107,9 +110,8 @@ export default function Theme() {
                 Iron
               
             
-          </RadioGroup>
+          
         
-
       
         Select Food Themes
         
@@ -139,8 +141,6 @@ export default function Theme() {
           Switch to Previous Mode
         
       
-   
+    
   );
 }
-
-
