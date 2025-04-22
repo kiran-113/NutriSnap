@@ -8,6 +8,7 @@ import Link from 'next/link';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useState, useEffect} from 'react';
 import {cn} from '@/lib/utils';
+import {Checkbox} from '@/components/ui/checkbox';
 
 export default function ThemePage() {
   const router = useRouter();
@@ -79,24 +80,24 @@ export default function ThemePage() {
 
           <div className="w-1/2 pl-4">
             <Label>Select Food Theme</Label>
-            <RadioGroup defaultValue={foodTheme} onValueChange={handleFoodThemeChange} className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="veg" id="veg" />
+                <Checkbox id="veg" />
                 <Label htmlFor="veg">Veg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="non-veg" id="non-veg" />
+                <Checkbox id="non-veg" />
                 <Label htmlFor="non-veg">Non-Veg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="egg" id="egg" />
+                <Checkbox id="egg" />
                 <Label htmlFor="egg">Egg</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="seafood" id="seafood" />
+                <Checkbox id="seafood" />
                 <Label htmlFor="seafood">Seafood</Label>
               </div>
-            </RadioGroup>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -106,3 +107,4 @@ export default function ThemePage() {
     </div>
   );
 }
+
