@@ -98,7 +98,7 @@ export default function ThemePage() {
     
       
         
-          Diet &amp; Nutri Directive
+          Diet & Nutri Directive
         
       
       
@@ -233,3 +233,4 @@ export default function ThemePage() {
     
   );
 }
+
