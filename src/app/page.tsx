@@ -287,7 +287,7 @@ Overall: ${result.summary.overall}
             {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
           </Button>
           {nutritionalInfo ? (
-            <Textarea readOnly value={nutritionalInfo} className="min-h-[100px]" />
+            <Textarea readOnly value={nutritionalInfo}  />
           ) : (
             <p>No nutritional information generated yet.</p>
           )}
@@ -302,3 +302,4 @@ Overall: ${result.summary.overall}
     </div>
   );
 }
+
