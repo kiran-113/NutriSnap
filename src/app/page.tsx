@@ -211,15 +211,33 @@ export default function Home() {
         Effortlessly track your nutrition!
       </h2>
 
-      {imageDataUrl && (
-        <div className="mb-4">
+      <div className="mb-4">
+        {imageDataUrl ? (
           <img
             src={imageDataUrl}
             alt="Uploaded Food"
             className="w-full aspect-video rounded-md shadow-lg"
           />
-        </div>
-      )}
+        ) : (
+          <div className="w-full aspect-video rounded-md bg-gray-100 flex items-center justify-center">
+            {!hasCameraPermission && isCameraActive ? (
+              <Alert variant="destructive">
+                <AlertTitle>Camera Access Required</AlertTitle>
+                <AlertDescription>
+                  Please allow camera access to use this feature.
+                </AlertDescription>
+              </Alert>
+            ) : isCameraActive ? (
+              <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+            ) : (
+              <div className="text-center p-4">
+                <p className="font-medium">No image captured or selected</p>
+                <p>Please capture or upload an image to continue.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <div className="flex space-x-2 mb-4">
         {!isCameraActive && (
@@ -308,7 +326,7 @@ export default function Home() {
         <Button
           variant="secondary"
           onClick={handleAddFoodItem}
-          className="bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white"
         >
           Add Food Item
         </Button>
@@ -368,7 +386,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          ''
+          <p className="text-yellow-300">No nutritional information generated yet.</p>
         )}
       </div>
 

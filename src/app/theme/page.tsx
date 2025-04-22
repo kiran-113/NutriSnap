@@ -1,15 +1,15 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {Label} from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import Link from 'next/link';
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
-import {useState, useEffect} from 'react';
-import {cn} from '@/lib/utils';
-import {Checkbox} from '@/components/ui/checkbox';
-import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendations';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
+import { generateFoodRecommendations } from '@/ai/flows/generate-food-recommendations';
 
 export default function ThemePage() {
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function ThemePage() {
     if (foodTheme.egg) {
       color = 'bg-gradient-to-r from-yellow-400 to-amber-500';
     }
-    
+
     if (foodTheme.all) {
       color = 'bg-gradient-to-r from-gray-400 to-stone-500'; // Example color for "All"
     }
@@ -62,9 +62,9 @@ export default function ThemePage() {
       });
     } else {
       setFoodTheme(prevTheme => {
-        const updatedTheme = {...prevTheme, [theme]: checked};
+        const updatedTheme = { ...prevTheme, [theme]: checked };
         const anySelected = Object.keys(updatedTheme).filter(key => key !== 'all').some(key => updatedTheme[key]);
-        return {...updatedTheme, all: anySelected && Object.keys(updatedTheme).filter(key => key !== 'all').every(key => updatedTheme[key])};
+        return { ...updatedTheme, all: anySelected && Object.keys(updatedTheme).filter(key => key !== 'all').every(key => updatedTheme[key]) };
       });
     }
   };
@@ -80,7 +80,7 @@ export default function ThemePage() {
 
     try {
       const selectedFoodThemes = Object.keys(foodTheme).filter(key => foodTheme[key] === true && key !== 'all');
-      const result = await generateFoodRecommendations({nutrientTheme: nutrientTheme, foodThemes: selectedFoodThemes});
+      const result = await generateFoodRecommendations({ nutrientTheme: nutrientTheme, foodThemes: selectedFoodThemes });
       setFoodRecommendations(result.recommendedFoods.slice(0, 5));
       setDishRecommendations(result.recommendedFoods.slice(5, 10));
     } catch (error: any) {
@@ -90,122 +90,146 @@ export default function ThemePage() {
       setLoadingRecommendations(false);
     }
   };
-    const navigateToInstructions = () => {
-      router.push('/instructions');
-    };
+  const navigateToInstructions = () => {
+    router.push('/instructions');
+  };
 
   return (
-    <div className={cn('container mx-auto p-4 transition-colors duration-500 text-white', themeColor)}>
-      <Card className="mb-4 bg-transparent shadow-none border-2 border-white">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold">Nutri Value Checker in Food</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 pr-4">
-            <Label>Select Nutrient Theme</Label>
-            <RadioGroup defaultValue={nutrientTheme} onValueChange={handleNutrientThemeChange} className="flex flex-col space-y-2">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="protein" id="protein" />
-                <Label htmlFor="protein">Protein</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="calories" id="calories" />
-                <Label htmlFor="calories">Calories</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="carbohydrates" id="carbohydrates" />
-                <Label htmlFor="carbohydrates">Carbohydrates</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="fiber" id="fiber" />
-                <Label htmlFor="fiber">Fiber</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="calcium" id="calcium" />
-                <Label htmlFor="calcium">Calcium</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="iron" id="iron" />
-                <Label htmlFor="iron">Iron</Label>
-              </div>
-            </RadioGroup>
-          </div>
+    
+      
+        
+          Diet & Nutri Directive
+        
+      
+      
+        Select Nutrient Theme
+        
+          
+            
+              Protein
+            
+          
+          
+            
+              Calories
+            
+          
+          
+            
+              Carbohydrates
+            
+          
+          
+            
+              Fiber
+            
+          
+          
+            
+              Calcium
+            
+          
+          
+            
+              Iron
+            
+          
+        
 
-          <div className="w-full md:w-1/2 pl-4">
-            <Label>Select Food Theme</Label>
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="veg" checked={foodTheme.veg} onCheckedChange={checked => handleFoodThemeChange('veg', checked)} />
-                <Label htmlFor="veg">Veg</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="non-veg" checked={foodTheme.nonVeg} onCheckedChange={checked => handleFoodThemeChange('nonVeg', checked)} />
-                <Label htmlFor="non-veg">Non-Veg</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="egg" checked={foodTheme.egg} onCheckedChange={checked => handleFoodThemeChange('egg', checked)} />
-                <Label htmlFor="egg">Egg</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="seafood" checked={foodTheme.seafood} onCheckedChange={checked => handleFoodThemeChange('seafood', checked)} />
-                <Label htmlFor="seafood">Seafood</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
-                <Label htmlFor="all">All</Label>
-              </div>
-              <Button variant="secondary" onClick={generateRecommendations} disabled={loadingRecommendations} className="mt-4 bg-white text-black">
-                {loadingRecommendations ? 'Generating...' : 'Generate Recommendations'}
-              </Button>
-            </div>
-          </div>
-          <Link href="/" className="flex justify-end">
-            <Button variant="outline">Switch to Previous Mode</Button>
-          </Link>
-             
-        </CardContent>
-      </Card>
+        
+          Select Food Theme
+          
+            
+              
+                Veg
+              
+            
+            
+              
+                Non-Veg
+              
+            
+            
+              
+                Egg
+              
+            
+            
+              
+                Seafood
+              
+            
+            
+              
+                All
+              
+            
+            
+              
+                Generate Recommendations
+              
+            
+          
+        
+         More
+      
 
       {showRecommendations && (
         <>
-          <h2 className="text-2xl font-bold mb-4">5 Food Items:</h2>
+          
+            5 Food Items:
+          
           {foodRecommendations ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
               {foodRecommendations.map((food, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm p-4 rounded-md shadow-md border border-white/20">
-                  <strong className="block font-semibold">{food.name}</strong>
-                  <p className="text-sm">{food.description}</p>
-                  <p className="text-sm"><b>Nutrient Amount:</b> {food.nutrientAmount}</p>
-                </div>
+                
+                  
+                    {food.name}
+                  
+                  
+                    {food.description}
+                  
+                  
+                    <b>Nutrient Amount:</b> {food.nutrientAmount}
+                  
+                
               ))}
-            </div>
+            
           ) : (
-            <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
+            
+              No food recommendations generated yet. Please select a nutrient and food theme.
+            
           )}
 
-          <h2 className="text-2xl font-bold mt-8 mb-4">5 Dishes:</h2>
+          
+            5 Dishes:
+          
           {dishRecommendations ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
               {dishRecommendations.map((dish, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm p-4 rounded-md shadow-md border border-white/20">
-                  <strong className="block font-semibold">{dish.name}</strong>
-                  <p className="text-sm">{dish.description}</p>
-                  <p className="text-sm"><b>Nutrient Amount:</b> {dish.nutrientAmount}</p>
-                                      <Button
-                      variant="secondary"
-                      onClick={() => router.push(`/instructions?dish=${encodeURIComponent(dish.name)}`)}
-                      className="mt-2 bg-white text-black"
-                    >
-                      View Instructions
-                    </Button>
-                </div>
+                
+                  
+                    {dish.name}
+                  
+                  
+                    {dish.description}
+                  
+                  
+                    <b>Nutrient Amount:</b> {dish.nutrientAmount}
+                  
+                  
+                    View Instructions
+                  
+                
               ))}
-            </div>
+            
           ) : (
-            <p>No dish recommendations generated yet. Please select a nutrient and food theme.</p>
+            
+              No dish recommendations generated yet. Please select a nutrient and food theme.
+            
           )}
         </>
       )}
-    </div>
+    
   );
 }
