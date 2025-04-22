@@ -42,7 +42,7 @@ export default function ThemePage() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState(false);
     const router = useRouter();
-    const [searchParamsResolved, setSearchParamsResolved] = useState(useSearchParams());
+    const searchParams = useSearchParams();
     const [dish, setDish] = useState<string | null>(null);
     const [themeColor, setThemeColor] = useState(
         'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl'
@@ -72,14 +72,10 @@ export default function ThemePage() {
     }, []);
 
     useEffect(() => {
-        setSearchParamsResolved(useSearchParams());
-    }, []);
-
-    useEffect(() => {
-        if (searchParamsResolved) {
-            setDish(searchParamsResolved.get('dish'));
+        if (searchParams) {
+            setDish(searchParams.get('dish'));
         }
-    }, [searchParamsResolved]);
+    }, [searchParams]);
 
     const handleNutrientChange = (value: string) => {
         setSelectedNutrient(value);
@@ -387,3 +383,4 @@ export default function ThemePage() {
         </>
     );
 }
+
