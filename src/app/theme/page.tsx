@@ -24,8 +24,8 @@ export default function ThemePage() {
         <CardHeader>
           <CardTitle>Customize Theme</CardTitle>
         </CardHeader>
-        <CardContent>
-          <RadioGroup defaultValue={theme} onValueChange={handleThemeChange}>
+        <CardContent className="flex">
+          <RadioGroup defaultValue={theme} onValueChange={handleThemeChange} className="mr-4">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="protein" id="protein" />
               <Label htmlFor="protein">Protein</Label>
@@ -51,6 +51,7 @@ export default function ThemePage() {
               <Label htmlFor="iron">Iron</Label>
             </div>
           </RadioGroup>
+
           <RadioGroup defaultValue={theme} onValueChange={handleThemeChange}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="veg" id="veg" />
@@ -69,12 +70,11 @@ export default function ThemePage() {
               <Label htmlFor="seafood">Seafood</Label>
             </div>
           </RadioGroup>
-          
-            <Link href="/" className="flex justify-end">
-              <Button variant="outline">Switch to Previous Mode</Button>
-            </Link>
         </CardContent>
       </Card>
+      <Link href="/" className="flex justify-end">
+        <Button variant="outline">Switch to Previous Mode</Button>
+      </Link>
     </div>
   );
 }
