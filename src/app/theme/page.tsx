@@ -21,7 +21,7 @@ export default function ThemePage() {
     seafood: false,
     all: false,
   });
-  const [themeColor, setThemeColor] = useState('bg-gray-100');
+  const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-blue-400 to-purple-500');
   const [foodRecommendations, setFoodRecommendations] = useState<any>(null);
   const [dishRecommendations, setDishRecommendations] = useState<any>(null);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
@@ -29,21 +29,19 @@ export default function ThemePage() {
 
   useEffect(() => {
     // Determine the theme color based on food type selection
-    let color = 'bg-gray-100'; // Default color
+    let color = 'bg-gradient-to-r from-blue-400 to-purple-500'; // Default color
     if (foodTheme.veg) {
-      color = 'bg-green-200';
+      color = 'bg-gradient-to-r from-green-400 to-teal-500';
     }
     if (foodTheme.nonVeg) {
-      color = 'bg-red-200';
+      color = 'bg-gradient-to-r from-red-400 to-orange-500';
     }
     if (foodTheme.egg) {
-      color = 'bg-yellow-200';
+      color = 'bg-gradient-to-r from-yellow-400 to-amber-500';
     }
-    if (foodTheme.seafood) {
-      color = 'bg-blue-200';
-    }
+    
     if (foodTheme.all) {
-      color = 'bg-gray-200'; // Example color for "All"
+      color = 'bg-gradient-to-r from-gray-400 to-stone-500'; // Example color for "All"
     }
     setThemeColor(color);
   }, [foodTheme]);
@@ -97,10 +95,10 @@ export default function ThemePage() {
     };
 
   return (
-    <div className={cn('container mx-auto p-4 transition-colors duration-500', themeColor)}>
-      <Card className="mb-4">
+    <div className={cn('container mx-auto p-4 transition-colors duration-500 text-white', themeColor)}>
+      <Card className="mb-4 bg-transparent shadow-none border-2 border-white">
         <CardHeader>
-          <CardTitle>Nutri Value Checker in Food</CardTitle>
+          <CardTitle className="text-3xl font-bold">Nutri Value Checker in Food</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 pr-4">
@@ -156,7 +154,7 @@ export default function ThemePage() {
                 <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
                 <Label htmlFor="all">All</Label>
               </div>
-              <Button variant="secondary" onClick={generateRecommendations} disabled={loadingRecommendations}>
+              <Button variant="secondary" onClick={generateRecommendations} disabled={loadingRecommendations} className="mt-4 bg-white text-black">
                 {loadingRecommendations ? 'Generating...' : 'Generate Recommendations'}
               </Button>
             </div>
@@ -170,11 +168,11 @@ export default function ThemePage() {
 
       {showRecommendations && (
         <>
-          <h2>5 Food Items:</h2>
+          <h2 className="text-2xl font-bold mb-4">5 Food Items:</h2>
           {foodRecommendations ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {foodRecommendations.map((food, index) => (
-                <div key={index} className="bg-blue-100 p-4 rounded-md shadow-md">
+                <div key={index} className="bg-white/10 backdrop-blur-sm p-4 rounded-md shadow-md border border-white/20">
                   <strong className="block font-semibold">{food.name}</strong>
                   <p className="text-sm">{food.description}</p>
                   <p className="text-sm"><b>Nutrient Amount:</b> {food.nutrientAmount}</p>
@@ -185,17 +183,18 @@ export default function ThemePage() {
             <p>No food recommendations generated yet. Please select a nutrient and food theme.</p>
           )}
 
-          <h2>5 Dishes:</h2>
+          <h2 className="text-2xl font-bold mt-8 mb-4">5 Dishes:</h2>
           {dishRecommendations ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {dishRecommendations.map((dish, index) => (
-                <div key={index} className="bg-green-100 p-4 rounded-md shadow-md">
+                <div key={index} className="bg-white/10 backdrop-blur-sm p-4 rounded-md shadow-md border border-white/20">
                   <strong className="block font-semibold">{dish.name}</strong>
                   <p className="text-sm">{dish.description}</p>
                   <p className="text-sm"><b>Nutrient Amount:</b> {dish.nutrientAmount}</p>
                                       <Button
                       variant="secondary"
                       onClick={() => router.push(`/instructions?dish=${encodeURIComponent(dish.name)}`)}
+                      className="mt-2 bg-white text-black"
                     >
                       View Instructions
                     </Button>
