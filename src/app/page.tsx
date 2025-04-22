@@ -213,7 +213,7 @@ export default function Home() {
       <div className="flex justify-between items-center mb-4">
         <CardTitle>NutriSnap</CardTitle>
         <Link href="/theme">
-          <Button variant="outline">Change Theme</Button>
+          <Button variant="outline">More</Button>
         </Link>
       </div>
       <Card className="mb-4">
