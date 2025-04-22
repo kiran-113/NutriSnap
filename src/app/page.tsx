@@ -1,4 +1,3 @@
-
 'use client';
 
 import {useState, useRef, useEffect} from 'react';
@@ -36,8 +35,8 @@ export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
-  const [foodItems, setFoodItems] = useState<{name: string; quantity: string}[]>([{name: '', quantity: ''}]);
-  const [nutritionalInfo, setNutritionalInfo] = useState<any>(null);
+  const [foodItems, setFoodItems<{name: string; quantity: string}[]>([{name: '', quantity: ''}]);
+  const [nutritionalInfo, setNutritionalInfo: any] = useState(null);
   const [loadingFood, setLoadingFood] = useState(false);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
   const {toast} = useToast();
@@ -45,7 +44,7 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const router = useRouter();
-  const [themeColor, setThemeColor] = useState('bg-green-100');
+  const [themeColor, setThemeColor] = useState('bg-green-100 shadow-green-500/50');
 
   useEffect(() => {
     // Update theme color based on food items
@@ -427,8 +426,11 @@ export default function Home() {
           </a>
         </p>
       </footer>
-      
+       <Link href="/instructions">
+        <Button variant="outline">Switch to Instructions Mode</Button>
+      </Link>
       <Toaster/>
     </div>
   );
 }
+
