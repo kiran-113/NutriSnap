@@ -17,7 +17,7 @@ export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageType, setImageType] = useState<string>('');
-  const [foodItems, setFoodItems] = useState<string[]>([]);
+  const [foodItems, setFoodItems] = useState< { name: string; quantity: string }[]>([]);
   const [nutritionalInfo, setNutritionalInfo] = useState<{
     calories: string;
     protein: string;
@@ -27,6 +27,9 @@ export default function Home() {
     iron: string;
     vitaminB: string;
     vitaminC: string;
+    vitaminA: string;
+    vitaminD: string;
+    potassium: string;
     overall: string;
   } | null>(null);
   const [loadingFood, setLoadingFood] = useState(false);
@@ -114,7 +117,7 @@ export default function Home() {
     setLoadingFood(true);
     try {
       const result = await identifyFood({imageUrl, imageType});
-      setFoodItems(result.foodItems);
+      setFoodItems(result.foodItems.map(foodItem => ({ name: foodItem, quantity: '' })));
       toast({
         title: 'Food Identified!',
         description: 'Food items identified successfully.',
@@ -157,14 +160,14 @@ export default function Home() {
     }
   };
 
-  const handleFoodItemChange = (index: number, value: string) => {
+  const handleFoodItemChange = (index: number, field: 'name' | 'quantity', value: string) => {
     const newFoodItems = [...foodItems];
-    newFoodItems[index] = value;
+    newFoodItems[index][field] = value;
     setFoodItems(newFoodItems);
   };
 
   const handleAddFoodItem = () => {
-    setFoodItems([...foodItems, '']);
+    setFoodItems([...foodItems, { name: '', quantity: '' }]);
   };
 
   const handleRemoveFoodItem = (index: number) => {
@@ -237,16 +240,25 @@ export default function Home() {
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Food Items</CardTitle>
-          <CardDescription>Manually adjust the identified food items.</CardDescription>
+          <CardDescription>Manually adjust the identified food items and provide quantity.</CardDescription>
         </CardHeader>
         <CardContent>
           {foodItems.map((item, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <Input
                 type="text"
-                value={item}
-                onChange={(e) => handleFoodItemChange(index, e.target.value)}
+                value={item.name}
+                onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
                 placeholder="Food Item"
+                className="w-1/2"
+              />
+              <Input
+                type="text"
+                value={item.quantity}
+                onChange={(e) => handleFoodItemChange(index, 'quantity', e.target.value)}
+                placeholder="Quantity (e.g., 1 medium, 100g)"
+                required
+                className="w-1/2"
               />
               <Button variant="destructive" size="icon" onClick={() => handleRemoveFoodItem(index)}>
                 <svg
@@ -280,7 +292,7 @@ export default function Home() {
           <CardDescription>Estimated calories, vitamins, and minerals.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button disabled={!foodItems.length || loadingNutrition} onClick={handleGenerateNutrition} className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4">
+          <Button disabled={!foodItems.every(item => item.name && item.quantity) || loadingNutrition} onClick={handleGenerateNutrition} className="bg-accent text-accent-foreground hover:bg-accent/80 mb-4">
             {loadingNutrition ? 'Generating...' : 'Generate Nutritional Info'}
           </Button>
 
@@ -326,13 +338,28 @@ export default function Home() {
                 <p>{nutritionalInfo.vitaminC}</p>
               </div>
 
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Vitamin A</h3>
+                <p>{nutritionalInfo.vitaminA}</p>
+              </div>
+
+              <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Vitamin D</h3>
+                <p>{nutritionalInfo.vitaminD}</p>
+              </div>
+
+               <div className="p-4 rounded-md shadow-md">
+                <h3 className="font-semibold">Potassium</h3>
+                <p>{nutritionalInfo.potassium}</p>
+              </div>
+
                <div className="p-4 rounded-md shadow-md">
                 <h3 className="font-semibold">Overall</h3>
                 <p>{nutritionalInfo.overall}</p>
               </div>
             </div>
           ) : (
-            <p>No nutritional information generated yet.</p>
+            <p>No nutritional information generated yet. Please provide the quantity of each food item.</p>
           )}
         </CardContent>
       </Card>
