@@ -10,104 +10,104 @@ body {
 
 @layer base {
   :root {
-    --background: 140 60% 98%; /* Light Green */
-    --foreground: 240 10% 3.9%; /* Dark Gray */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 140 70% 45%; /* Vibrant Green */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 140 30% 90%; /* Soft Green */
-    --secondary-foreground: 240 10% 3.9%; /* Dark Gray */
-    --muted: 140 20% 95%; /* Very Light Green */
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 40 100% 60%; /* Bright Orange */
+    --background: 140 40% 94%; /* Darker Light Green */
+    --foreground: 240 20% 10%; /* Dark Gray */
+    --card: 0 0% 96%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 96%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 140 60% 40%; /* Slightly Darker Green */
+    --primary-foreground: 0 0% 96%;
+    --secondary: 140 20% 86%; /* Soft Green */
+    --secondary-foreground: 240 20% 10%; /* Dark Gray */
+    --muted: 140 10% 90%; /* Very Light Green */
+    --muted-foreground: 0 0% 40%;
+    --accent: 40 90% 55%; /* Bright Orange */
     --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 74.2% 55.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 140 60% 55%; /* Medium Green */
-    --chart-1: 40 80% 60%; /* Orange */
-    --chart-2: 220 70% 50%; /* Blue */
-    --chart-3: 300 60% 55%; /* Pink */
-    --chart-4: 60 70% 55%; /* Yellow */
-    --chart-5: 180 60% 50%; /* Cyan */
-    --radius: 0.75rem; /* Slightly more rounded */
-    --sidebar-background: 140 40% 92%; /* Softer Green */
-    --sidebar-foreground: 240 10% 20%; /* Medium Dark Gray */
-    --sidebar-primary: 140 60% 40%; /* Slightly Darker Green */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 140 30% 85%; /* Light Green Accent */
-    --sidebar-accent-foreground: 240 10% 30%; /* Darker Gray */
-    --sidebar-border: 140 20% 80%; /* Light Green Border */
-    --sidebar-ring: 140 50% 50%; /* Medium Green Ring */
-  }
-
-  .dark {
-    --background: 240 10% 3.9%; /* Dark Gray */
-    --foreground: 140 60% 98%; /* Light Green */
-    --card: 240 10% 3.9%;
-    --card-foreground: 140 60% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 140 60% 98%;
-    --primary: 140 60% 98%; /* Light Green */
-    --primary-foreground: 240 10% 3.9%; /* Dark Gray */
-    --secondary: 240 10% 14.9%; /* Darker Gray */
-    --secondary-foreground: 140 60% 98%; /* Light Green */
-    --muted: 240 10% 14.9%;
-    --muted-foreground: 140 30% 63.9%; /* Medium Green */
-    --accent: 240 10% 14.9%;
-    --accent-foreground: 140 60% 98%; /* Light Green */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 140 60% 98%; /* Light Green */
-    --border: 240 10% 14.9%;
-    --input: 240 10% 14.9%;
-    --ring: 140 40% 83.1%; /* Light Green Ring */
+    --border: 0 0% 84.8%;
+    --input: 0 0% 84.8%;
+    --ring: 140 50% 50%; /* Medium Green */
     --chart-1: 40 80% 55%; /* Orange */
     --chart-2: 220 70% 50%; /* Blue */
     --chart-3: 300 60% 55%; /* Pink */
     --chart-4: 60 70% 55%; /* Yellow */
     --chart-5: 180 60% 50%; /* Cyan */
-    --sidebar-background: 240 10% 10%; /* Darker Gray */
-    --sidebar-foreground: 140 40% 92%; /* Light Green */
-    --sidebar-primary: 140 60% 40%; /* Slightly Darker Green */
+    --radius: 0.75rem; /* Slightly more rounded */
+    --sidebar-background: 140 30% 88%; /* Softer Green */
+    --sidebar-foreground: 240 15% 20%; /* Medium Dark Gray */
+    --sidebar-primary: 140 50% 35%; /* Slightly Darker Green */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 20%; /* Darker Gray Accent */
-    --sidebar-accent-foreground: 140 40% 92%; /* Light Green */
-    --sidebar-border: 240 10% 30%; /* Darker Gray Border */
-    --sidebar-ring: 140 50% 50%; /* Medium Green Ring */
+    --sidebar-accent: 140 20% 80%; /* Light Green Accent */
+    --sidebar-accent-foreground: 240 15% 30%; /* Darker Gray */
+    --sidebar-border: 140 10% 75%; /* Light Green Border */
+    --sidebar-ring: 140 40% 45%; /* Medium Green Ring */
+  }
+
+  .dark {
+    --background: 240 15% 7%; /* Dark Gray */
+    --foreground: 140 40% 94%; /* Light Green */
+    --card: 240 15% 7%;
+    --card-foreground: 140 40% 94%;
+    --popover: 240 15% 7%;
+    --popover-foreground: 140 40% 94%;
+    --primary: 140 50% 94%; /* Light Green */
+    --primary-foreground: 240 15% 7%; /* Dark Gray */
+    --secondary: 240 15% 18%; /* Darker Gray */
+    --secondary-foreground: 140 40% 94%; /* Light Green */
+    --muted: 240 15% 18%;
+    --muted-foreground: 140 20% 58%; /* Medium Green */
+    --accent: 240 15% 18%;
+    --accent-foreground: 140 40% 94%; /* Light Green */
+    --destructive: 0 52.8% 25.6%;
+    --destructive-foreground: 140 40% 94%; /* Light Green */
+    --border: 240 15% 18%;
+    --input: 240 15% 18%;
+    --ring: 140 30% 78%; /* Light Green Ring */
+    --chart-1: 40 80% 50%; /* Orange */
+    --chart-2: 220 70% 50%; /* Blue */
+    --chart-3: 300 60% 55%; /* Pink */
+    --chart-4: 60 70% 55%; /* Yellow */
+    --chart-5: 180 60% 50%; /* Cyan */
+    --sidebar-background: 240 15% 14%; /* Darker Gray */
+    --sidebar-foreground: 140 30% 88%; /* Light Green */
+    --sidebar-primary: 140 50% 35%; /* Slightly Darker Green */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 15% 24%; /* Darker Gray Accent */
+    --sidebar-accent-foreground: 140 30% 88%; /* Light Green */
+    --sidebar-border: 240 15% 24%; /* Darker Gray Border */
+    --sidebar-ring: 140 40% 45%; /* Medium Green Ring */
   }
 
   /* Green Theme */
   .green-theme {
-    --background: 100 80% 70%;
-    --foreground: 0 0% 10%;
-    --primary: 140 60% 50%;
-    --secondary: 140 30% 80%;
-    --accent: 60 100% 60%;
-    --shadow-color: rgba(100, 100, 100, 0.3); /* Example shadow color */
+    --background: 100 60% 60%;
+    --foreground: 0 0% 5%;
+    --primary: 140 50% 45%;
+    --secondary: 140 20% 70%;
+    --accent: 60 90% 55%;
+    --shadow-color: rgba(100, 100, 100, 0.4); /* Example shadow color */
   }
 
   /* Orange Theme */
   .orange-theme {
-    --background: 40 80% 70%;
-    --foreground: 0 0% 10%;
-    --primary: 40 60% 50%;
-    --secondary: 40 30% 80%;
-    --accent: 40 100% 60%;
-    --shadow-color: rgba(200, 100, 0, 0.3); /* Example shadow color */
+    --background: 40 60% 60%;
+    --foreground: 0 0% 5%;
+    --primary: 40 50% 45%;
+    --secondary: 40 20% 70%;
+    --accent: 40 90% 55%;
+    --shadow-color: rgba(200, 100, 0, 0.4); /* Example shadow color */
   }
 
   /* Red Theme */
   .red-theme {
-    --background: 0 80% 70%;
-    --foreground: 0 0% 10%;
-    --primary: 0 60% 50%;
-    --secondary: 0 30% 80%;
-    --accent: 0 100% 60%;
-    --shadow-color: rgba(200, 0, 0, 0.3); /* Example shadow color */
+    --background: 0 60% 60%;
+    --foreground: 0 0% 5%;
+    --primary: 0 50% 45%;
+    --secondary: 0 20% 70%;
+    --accent: 0 90% 55%;
+    --shadow-color: rgba(200, 0, 0, 0.4); /* Example shadow color */
   }
 
   * {
