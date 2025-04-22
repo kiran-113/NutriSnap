@@ -21,7 +21,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
  
  const Toaster = dynamic(() => import('@/components/ui/toaster').then(mod => mod.Toaster), {
    ssr: false,
-@@ -25,7 +26,7 @@
+@@ -36,7 +37,7 @@
    const [themeColor, setThemeColor] = useState('bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-xl');
    const [isCameraActive, setIsCameraActive] = useState(false);
    const [selectedNutrient, setSelectedNutrient] = useState<string | null>(null);
@@ -30,7 +30,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
    const [foodTheme, setFoodTheme] = useState({
      veg: false,
      nonVeg: false,
-@@ -33,7 +34,7 @@
+@@ -44,7 +45,7 @@
      seafood: false,
      all: false,
    });
@@ -39,7 +39,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
    const [recommendedFoods, setRecommendedFoods] = useState<any>(null);
    const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   
-@@ -41,7 +42,7 @@
+@@ -52,7 +53,7 @@
      const loadTheme = () => {
        const storedTheme = localStorage.getItem('theme');
        if (storedTheme) {
@@ -48,7 +48,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
          setThemeColor(storedTheme);
        }
      };
-@@ -49,7 +50,7 @@
+@@ -60,7 +61,7 @@
      loadTheme();
    }, []);
   
@@ -57,7 +57,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
    const handleNutrientChange = (value: string) => {
      setSelectedNutrient(value);
    };
-@@ -141,6 +142,7 @@
+@@ -152,6 +153,7 @@
            Switch to Previous Mode
          </Button>
        
@@ -65,7 +65,7 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
  
        
          Food Items
-@@ -195,7 +198,7 @@
+@@ -206,7 +210,7 @@
    );
  
  
@@ -74,5 +74,6 @@ import {generateFoodRecommendations} from '@/ai/flows/generate-food-recommendati
  
  
  
+
 
 
