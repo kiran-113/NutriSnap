@@ -18,6 +18,7 @@ export default function ThemePage() {
     nonVeg: false,
     egg: false,
     seafood: false,
+    all: false,
   });
   const [themeColor, setThemeColor] = useState('bg-gray-100');
 
@@ -35,6 +36,9 @@ export default function ThemePage() {
     }
     if (foodTheme.seafood) {
       color = 'bg-blue-200';
+    }
+    if (foodTheme.all) {
+      color = 'bg-gray-200'; // Example color for "All"
     }
     setThemeColor(color);
   }, [foodTheme]);
@@ -104,6 +108,10 @@ export default function ThemePage() {
                 <Checkbox id="seafood" checked={foodTheme.seafood} onCheckedChange={checked => handleFoodThemeChange('seafood', checked)} />
                 <Label htmlFor="seafood">Seafood</Label>
               </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="all" checked={foodTheme.all} onCheckedChange={checked => handleFoodThemeChange('all', checked)} />
+                <Label htmlFor="all">All</Label>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -114,3 +122,4 @@ export default function ThemePage() {
     </div>
   );
 }
+
